@@ -5,7 +5,7 @@
 
 class Xi2Upload {
     constructor() {
-        this.API_BASE = '/xi2-01/src/api/upload/';
+        this.API_BASE = '/xi2.ir/src/api/upload/';
         this.uploadZone = document.getElementById('uploadZone');
         this.fileInput = document.getElementById('fileInput');
         this.selectFilesBtn = document.getElementById('selectFiles');
@@ -312,13 +312,14 @@ class Xi2Upload {
                     reject(new Error('خطا در برقراری ارتباط'));
                 });
 
+                xhr.open('POST', this.API_BASE + 'upload.php');
+                
                 // اضافه کردن توکن احراز هویت اگر موجود باشد
                 const token = window.xi2Auth?.getToken();
                 if (token) {
                     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
                 }
-
-                xhr.open('POST', this.API_BASE + 'upload.php');
+                
                 xhr.send(formData);
             });
 

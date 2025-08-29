@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>تست آپلود فایل</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h2>تست API آپلود</h2>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
+        <div>
+            <label>انتخاب فایل:</label>
+            <input type="file" name="file" accept="image/*" required>
+        </div>
+        <div>
+            <label>توضیحات (اختیاری):</label>
+            <input type="text" name="description" placeholder="توضیحات فایل">
+        </div>
+        <div>
+            <button type="submit">آپلود</button>
+        </div>
+    </form>
+    
+    <div id="result" style="margin-top: 20px;"></div>
+    
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = 'در حال آپلود...';
+            
+            try {
+                const response = await fetch('/xi2.ir/src/api/upload/upload.php', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Authorization': 'Bearer 2d401bfbcd5c2036917e5d4a952ec5dabbba3508e6a45e3dd0f029784e5643b0'
+                    }
+                });
+                
+                const result = await response.json();
+                resultDiv.innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+                
+            } catch (error) {
+                resultDiv.innerHTML = 'خطا: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

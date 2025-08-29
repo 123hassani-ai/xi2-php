@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست منوی کاربری - موقعیت‌یابی</title>
+    <link rel="stylesheet" href="src/assets/css/main.css">
+    <link rel="stylesheet" href="src/assets/css/components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Vazirmatn', sans-serif;
+            background: #f5f7fa;
+            transition: all 0.3s ease;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-area {
+            background: #f8f9fa;
+            padding: 40px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .position-test {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .position-info {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .test-header {
+                padding: 15px;
+            }
+            
+            .test-controls {
+                justify-content: center;
+            }
+            
+            .position-test {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <div class="logo">
+                XI2 🎨
+            </div>
+            
+            <div class="nav">
+                <!-- منوی کاربری اینجا اضافه می‌شود -->
+            </div>
+        </div>
+        
+        <div class="test-controls">
+            <button onclick="simulateLogin()" class="test-btn" 
+                    style="background: #28a745; color: white;">
+                🔑 ورود کاربر
+            </button>
+            
+            <button onclick="simulateLogout()" class="test-btn" 
+                    style="background: #dc3545; color: white;">
+                🚪 خروج کاربر
+            </button>
+            
+            <button onclick="testPosition('small')" class="test-btn"
+                    style="background: #17a2b8; color: white;">
+                📱 موبایل کوچک (360px)
+            </button>
+            
+            <button onclick="testPosition('medium')" class="test-btn"
+                    style="background: #ffc107; color: black;">
+                📱 موبایل متوسط (375px)
+            </button>
+            
+            <button onclick="testPosition('large')" class="test-btn"
+                    style="background: #6f42c1; color: white;">
+                📱 موبایل بزرگ (414px)
+            </button>
+            
+            <button onclick="testPosition('tablet')" class="test-btn"
+                    style="background: #20c997; color: white;">
+                📋 تبلت (768px)
+            </button>
+            
+            <button onclick="testPosition('desktop')" class="test-btn"
+                    style="background: #6c757d; color: white;">
+                💻 دسکتاپ
+            </button>
+        </div>
+        
+        <div class="content-area">
+            <h2>🧪 تست موقعیت‌یابی منوی کاربری</h2>
+            <p>این صفحه برای تست موقعیت صحیح منوی کاربری در سایزهای مختلف طراحی شده است.</p>
+            
+            <div class="position-test">
+                <span>عرض فعلی صفحه:</span>
+                <span class="position-info" id="currentWidth">-</span>
+            </div>
+            
+            <div class="position-test">
+                <span>حالت فعلی:</span>
+                <span class="position-info" id="currentMode">دسکتاپ</span>
+            </div>
+            
+            <div class="position-test">
+                <span>موقعیت منو:</span>
+                <span class="position-info" id="menuPosition">-</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/assets/js/auth.js"></script>
+    <script>
+        // به‌روزرسانی اطلاعات صفحه
+        function updatePageInfo() {
+            const width = window.innerWidth;
+            document.getElementById('currentWidth').textContent = width + 'px';
+            
+            let mode = 'دسکتاپ';
+            if (width <= 360) mode = 'موبایل خیلی کوچک';
+            else if (width <= 375) mode = 'موبایل کوچک';
+            else if (width <= 414) mode = 'موبایل متوسط';
+            else if (width <= 768) mode = 'موبایل بزرگ / تبلت کوچک';
+            else if (width <= 1024) mode = 'تبلت / دسکتاپ کوچک';
+            
+            document.getElementById('currentMode').textContent = mode;
+            
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                const rect = dropdown.getBoundingClientRect();
+                const position = `راست: ${rect.right.toFixed(0)}px، چپ: ${rect.left.toFixed(0)}px`;
+                document.getElementById('menuPosition').textContent = position;
+            }
+        }
+
+        // شبیه‌سازی ورود
+        function simulateLogin() {
+            if (window.xi2Auth) {
+                const mockUser = {
+                    id: 1,
+                    fullName: 'علی احمدی',
+                    mobile: '09123456789',
+                    email: 'ali@example.com'
+                };
+                
+                window.xi2Auth.updateUIForLoggedInUser(mockUser);
+                updatePageInfo();
+            }
+        }
+
+        // شبیه‌سازی خروج
+        function simulateLogout() {
+            if (window.xi2Auth) {
+                window.xi2Auth.logout();
+            }
+        }
+
+        // تست موقعیت‌های مختلف
+        function testPosition(size) {
+            const body = document.body;
+            
+            // ریست
+            body.style.maxWidth = '';
+            body.style.margin = '';
+            body.style.border = '';
+            body.style.padding = '';
+            
+            switch(size) {
+                case 'small':
+                    body.style.maxWidth = '360px';
+                    body.style.margin = '0 auto';
+                    body.style.border = '2px solid #dc3545';
+                    body.style.padding = '10px';
+                    break;
+                case 'medium':
+                    body.style.maxWidth = '375px';
+                    body.style.margin = '0 auto';
+                    body.style.border = '2px solid #ffc107';
+                    body.style.padding = '10px';
+                    break;
+                case 'large':
+                    body.style.maxWidth = '414px';
+                    body.style.margin = '0 auto';
+                    body.style.border = '2px solid #6f42c1';
+                    body.style.padding = '10px';
+                    break;
+                case 'tablet':
+                    body.style.maxWidth = '768px';
+                    body.style.margin = '0 auto';
+                    body.style.border = '2px solid #20c997';
+                    body.style.padding = '10px';
+                    break;
+                default:
+                    body.style.padding = '20px';
+                    break;
+            }
+            
+            setTimeout(updatePageInfo, 100);
+        }
+
+        // به‌روزرسانی خودکار
+        window.addEventListener('resize', updatePageInfo);
+        window.addEventListener('load', () => {
+            updatePageInfo();
+            // شبیه‌سازی خودکار ورود
+            setTimeout(simulateLogin, 500);
+        });
+
+        // به‌روزرسانی موقعیت هنگام باز/بسته شدن منو
+        document.addEventListener('click', () => {
+            setTimeout(updatePageInfo, 100);
+        });
+    </script>
+</body>
+</html>

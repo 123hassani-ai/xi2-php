@@ -16,7 +16,7 @@ try {
     $database = 'xi2_db';
     
     echo "📡 اتصال به MySQL...\n";
-    $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $username, $password);
+    $pdo = new PDO("mysql:host=$host;port=3307;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     echo "🗄️ ایجاد پایگاه داده...\n";

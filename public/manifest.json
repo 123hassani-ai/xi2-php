@@ -4,7 +4,7 @@
   "description": "پلتفرم هوشمند اشتراک‌گذاری و مدیریت تصاویر",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/",
+  "start_url": "/xi2.ir/public/",
   "display": "standalone",
   "background_color": "#F9FAFB",
   "theme_color": "#6366F1",
@@ -65,37 +65,13 @@
       "name": "آپلود سریع",
       "short_name": "آپلود",
       "description": "مستقیماً تصویر آپلود کنید",
-      "url": "/upload",
-      "icons": [
-        {
-          "src": "../src/assets/images/shortcut-upload.png",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "./index.html#upload"
     },
     {
       "name": "گالری من",
-      "short_name": "گالری",
+      "short_name": "گالری", 
       "description": "مشاهده تصاویر آپلود شده",
-      "url": "/gallery",
-      "icons": [
-        {
-          "src": "../src/assets/images/shortcut-gallery.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "../src/assets/images/screenshot1.png",
-      "type": "image/png",
-      "sizes": "540x720"
-    },
-    {
-      "src": "../src/assets/images/screenshot2.png",
-      "type": "image/png",
-      "sizes": "540x720"
+      "url": "./index.html#gallery"
     }
   ]
 }

@@ -4,7 +4,7 @@
  */
 
 try {
-    $dsn = "mysql:host=localhost;dbname=xi2_db;charset=utf8mb4";
+    $dsn = "mysql:host=localhost;port=3307;dbname=xi2_db;charset=utf8mb4";
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

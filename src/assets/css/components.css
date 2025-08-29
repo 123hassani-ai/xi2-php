@@ -454,3 +454,216 @@
     font-size: 0.875rem;
   }
 }
+
+/* منوی کاربری مینیمال */
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  min-height: 36px;
+}
+
+.user-trigger:hover {
+  background: var(--gray-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-arrow {
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.user-dropdown.show ~ .user-trigger .dropdown-arrow,
+.user-trigger:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.user-dropdown {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  min-width: 280px;
+  max-width: 400px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 10000;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.user-dropdown[data-popper-placement^='top'] {
+    transform: translateY(10px);
+}
+.user-dropdown[data-popper-placement^='bottom'] {
+    transform: translateY(-10px);
+}
+
+.user-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--bg-secondary) 100%);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.user-avatar-large {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-fullname {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.user-mobile {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  direction: ltr;
+  text-align: left;
+}
+
+.dropdown-menu {
+  padding: var(--spacing-sm);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: var(--transition-fast);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+.menu-item:hover {
+  background: var(--gray-100);
+  color: var(--primary);
+}
+
+.menu-item svg {
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.menu-item:hover svg {
+  color: var(--primary);
+}
+
+.menu-item.logout {
+  color: var(--error);
+}
+
+.menu-item.logout:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+
+.menu-item.logout svg {
+  color: var(--error);
+}
+
+.menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--spacing-sm) 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-trigger {
+    padding: var(--spacing-xs);
+    min-height: 32px;
+  }
+  
+  .user-dropdown {
+    min-width: 280px !important;
+    max-width: calc(100vw - 32px) !important;
+    z-index: 10001;
+  }
+  
+  .dropdown-header {
+    padding: var(--spacing-md);
+  }
+  
+  .user-avatar-large {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .menu-item {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 0.9rem;
+  }
+  
+  .menu-item svg {
+    width: 18px;
+    height: 18px;
+  }
+}

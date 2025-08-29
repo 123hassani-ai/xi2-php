@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست اتصال Frontend-Backend</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .divider {
+            margin: 30px 0;
+            border-bottom: 2px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 تست اتصال Frontend-Backend</h1>
+        
+        <!-- ثبت‌نام -->
+        <h2>1. ثبت‌نام</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label>نام:</label>
+                <input type="text" id="fullName" value="کاربر تست فرانت">
+            </div>
+            <div class="form-group">
+                <label>موبایل: (می‌توانید فارسی تایپ کنید - مثل: ۰۹۱۲۳۴۵۶۶۶۶)</label>
+                <input type="text" id="mobile" value="09123456666" placeholder="شماره موبایل">
+            </div>
+            <div class="form-group">
+                <label>رمز عبور:</label>
+                <input type="password" id="password" value="123456">
+            </div>
+            <button type="submit">ثبت‌نام</button>
+        </form>
+        <div class="result" id="registerResult"></div>
+
+        <div class="divider"></div>
+
+        <!-- ورود -->
+        <h2>2. ورود</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>موبایل: (می‌توانید فارسی تایپ کنید)</label>
+                <input type="text" id="loginMobile" value="09123456666" placeholder="شماره موبایل">
+            </div>
+            <div class="form-group">
+                <label>رمز عبور:</label>
+                <input type="password" id="loginPassword" value="123456">
+            </div>
+            <button type="submit">ورود</button>
+        </form>
+        <div class="result" id="loginResult"></div>
+
+        <div class="divider"></div>
+
+        <!-- آپلود -->
+        <h2>3. آپلود فایل</h2>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label>انتخاب فایل:</label>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label>توضیحات:</label>
+                <input type="text" id="description" value="تست آپلود از فرانت‌اند">
+            </div>
+            <button type="submit">آپلود</button>
+        </form>
+        <div class="result" id="uploadResult"></div>
+
+        <div class="divider"></div>
+
+        <!-- لیست فایل‌ها -->
+        <h2>4. لیست فایل‌های من</h2>
+        <button type="button" id="loadFiles">نمایش فایل‌ها</button>
+        <div class="result" id="filesResult"></div>
+    </div>
+
+    <script>
+        let authToken = null;
+
+        // تبدیل اعداد فارسی/عربی به انگلیسی
+        function convertPersianToEnglish(input) {
+            const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            
+            let result = input;
+            
+            for (let i = 0; i < 10; i++) {
+                result = result.replace(new RegExp(persianNumbers[i], 'g'), englishNumbers[i]);
+                result = result.replace(new RegExp(arabicNumbers[i], 'g'), englishNumbers[i]);
+            }
+            
+            return result;
+        }
+
+        // تنظیم input های عددی
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileInputs = document.querySelectorAll('#mobile, #loginMobile');
+            
+            mobileInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    let value = convertPersianToEnglish(e.target.value);
+                    value = value.replace(/[^\d]/g, '');
+                    if (value.length > 11) {
+                        value = value.substring(0, 11);
+                    }
+                    e.target.value = value;
+                });
+                
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    let cleanNumber = convertPersianToEnglish(pastedText);
+                    cleanNumber = cleanNumber.replace(/[^\d]/g, '');
+                    if (cleanNumber.length > 11) {
+                        cleanNumber = cleanNumber.substring(0, 11);
+                    }
+                    input.value = cleanNumber;
+                });
+            });
+        });
+
+        // ثبت‌نام
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                name: document.getElementById('fullName').value,
+                mobile: document.getElementById('mobile').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch('/xi2.ir/src/api/auth/register.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                const resultDiv = document.getElementById('registerResult');
+                
+                if (result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ ' + result.message + '\n' + JSON.stringify(result.data, null, 2);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ ' + result.message;
+                }
+            } catch (error) {
+                document.getElementById('registerResult').className = 'result error';
+                document.getElementById('registerResult').textContent = '❌ خطا: ' + error.message;
+            }
+        });
+
+        // ورود
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                mobile: document.getElementById('loginMobile').value,
+                password: document.getElementById('loginPassword').value
+            };
+
+            try {
+                const response = await fetch('/xi2.ir/src/api/auth/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                const resultDiv = document.getElementById('loginResult');
+                
+                if (result.success) {
+                    authToken = result.data.token;
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ ' + result.message + '\n' + JSON.stringify(result.data, null, 2);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ ' + result.message;
+                }
+            } catch (error) {
+                document.getElementById('loginResult').className = 'result error';
+                document.getElementById('loginResult').textContent = '❌ خطا: ' + error.message;
+            }
+        });
+
+        // آپلود
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!authToken) {
+                document.getElementById('uploadResult').className = 'result error';
+                document.getElementById('uploadResult').textContent = '❌ ابتدا وارد شوید';
+                return;
+            }
+
+            const fileInput = document.getElementById('fileInput');
+            const description = document.getElementById('description').value;
+
+            if (!fileInput.files[0]) {
+                document.getElementById('uploadResult').className = 'result error';
+                document.getElementById('uploadResult').textContent = '❌ فایلی انتخاب نشده';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('description', description);
+
+            try {
+                const response = await fetch('/xi2.ir/src/api/upload/upload.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + authToken
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                const resultDiv = document.getElementById('uploadResult');
+                
+                if (result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ ' + result.message + '\n' + JSON.stringify(result.data, null, 2);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ ' + result.message;
+                }
+            } catch (error) {
+                document.getElementById('uploadResult').className = 'result error';
+                document.getElementById('uploadResult').textContent = '❌ خطا: ' + error.message;
+            }
+        });
+
+        // لیست فایل‌ها
+        document.getElementById('loadFiles').addEventListener('click', async () => {
+            if (!authToken) {
+                document.getElementById('filesResult').className = 'result error';
+                document.getElementById('filesResult').textContent = '❌ ابتدا وارد شوید';
+                return;
+            }
+
+            try {
+                const response = await fetch('/xi2.ir/src/api/upload/list.php', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + authToken
+                    }
+                });
+
+                const result = await response.json();
+                const resultDiv = document.getElementById('filesResult');
+                
+                if (result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ ' + result.message + '\n' + JSON.stringify(result.data, null, 2);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ ' + result.message;
+                }
+            } catch (error) {
+                document.getElementById('filesResult').className = 'result error';
+                document.getElementById('filesResult').textContent = '❌ خطا: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست منوی کاربری - زیتو</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="src/assets/css/main.css">
+    <link rel="stylesheet" href="src/assets/css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎯 زیتو</h1>
+                    <span>Xi2</span>
+                </div>
+                <nav class="nav">
+                    <a href="#features" class="nav-link">ویژگی‌ها</a>
+                    <a href="#login" class="nav-link btn btn-outline">ورود</a>
+                    <a href="#register" class="nav-link btn btn-primary">شروع رایگان</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: 100px; padding: 100px 20px;">
+        <div class="container">
+            <h1>تست منوی کاربری</h1>
+            
+            <div style="margin: 20px 0;">
+                <button onclick="testLogin()" id="loginBtn">لاگین تست</button>
+                <button onclick="testLogout()" id="logoutBtn">خروج</button>
+            </div>
+
+            <div id="status" style="padding: 10px; margin: 10px 0; background: #f0f0f0; border-radius: 5px;">
+                وضعیت: مهمان
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="src/assets/js/auth.js"></script>
+    
+    <script>
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        async function testLogin() {
+            try {
+                // شبیه‌سازی لاگین موفق
+                const userData = {
+                    id: 8,
+                    fullName: "تست منوی کاربری", 
+                    mobile: "09111111111",
+                    status: "active"
+                };
+                
+                const token = "210da9374e152b5c0baa4817eedcba37c00b73e9c5235db24407b1c6cdc35d70";
+                
+                // ذخیره در localStorage
+                localStorage.setItem('xi2_token', token);
+                localStorage.setItem('xi2_user', JSON.stringify(userData));
+                
+                // بروزرسانی UI
+                window.xi2Auth.updateUIForLoggedInUser(userData);
+                updateStatus('وضعیت: لاگین شده - ' + userData.fullName);
+                
+            } catch (error) {
+                console.error('خطا در لاگین تست:', error);
+                updateStatus('خطا در لاگین تست');
+            }
+        }
+
+        function testLogout() {
+            // پاک کردن localStorage
+            localStorage.removeItem('xi2_token');
+            localStorage.removeItem('xi2_user');
+            
+            // بروزرسانی UI
+            window.xi2Auth.updateUIForGuestUser();
+            updateStatus('وضعیت: خروج شده');
+        }
+
+        // بررسی وضعیت فعلی هنگام بارگذاری صفحه
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = window.xi2Auth.getCurrentUser();
+            if (user) {
+                window.xi2Auth.updateUIForLoggedInUser(user);
+                updateStatus('وضعیت: لاگین شده - ' + user.fullName);
+            } else {
+                updateStatus('وضعیت: مهمان');
+            }
+        });
+    </script>
+</body>
+</html>

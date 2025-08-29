@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست ورود واقعی - زیتو</title>
+    <link rel="stylesheet" href="src/assets/css/main.css">
+    <link rel="stylesheet" href="src/assets/css/components.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Vazirmatn', sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header-sim {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #6366F1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+        
+        .btn {
+            background: #6366F1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background: #4F46E5;
+        }
+        
+        .status-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* 
+        @media (max-width: 768px) {
+            .header-sim {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+        */
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- شبیه‌سازی Header صفحه اصلی -->
+        <header class="header-sim">
+            <div class="logo">🎯 زیتو</div>
+            <nav class="nav">
+                <a href="#login" class="nav-link btn btn-outline" id="loginBtn">ورود</a>
+                <a href="#register" class="nav-link btn btn-primary" id="registerBtn">شروع رایگان</a>
+            </nav>
+        </header>
+
+        <!-- فرم ورود -->
+        <div class="login-form" id="loginForm">
+            <h2>🔐 ورود به زیتو</h2>
+            <p>برای تست، از اطلاعات زیر استفاده کنید:</p>
+            
+            <form id="authForm">
+                <div class="form-group">
+                    <label>شماره موبایل:</label>
+                    <input type="tel" id="mobile" value="09111111111" placeholder="09123456789" required>
+                    <small style="color: #666;">اعداد فارسی خودکار به انگلیسی تبدیل می‌شود</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>رمز عبور:</label>
+                    <input type="password" id="password" value="123456" placeholder="رمز عبور" required>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">ورود</button>
+            </form>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                <strong>💡 راهنما:</strong>
+                <ul style="margin: 10px 0;">
+                    <li>پس از ورود، دکمه‌های "ورود" و "شروع رایگان" حذف می‌شوند</li>
+                    <li>منوی کاربری در سمت راست header ظاهر می‌شود</li>
+                    <li>در موبایل، منو در بالای صفحه نمایش داده می‌شود</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- وضعیت -->
+        <div class="status-card">
+            <h3>وضعیت فعلی</h3>
+            <div id="currentStatus">
+                <span class="status error">مهمان</span>
+            </div>
+            <div style="margin-top: 10px;" id="responseLog"></div>
+        </div>
+    </div>
+
+    <script src="src/assets/js/auth.js"></script>
+    <script>
+        let isProcessing = false;
+
+        // هندل کردن فرم ورود
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            const mobile = document.getElementById('mobile').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const responseLog = document.getElementById('responseLog');
+            
+            submitBtn.textContent = 'در حال ورود...';
+            submitBtn.disabled = true;
+            
+            try {
+                console.log('🚀 شروع ورود...', { mobile, password: '***' });
+                
+                if (window.xi2Auth) {
+                    const result = await window.xi2Auth.login(mobile, password);
+                    
+                    if (result.success) {
+                        console.log('✅ ورود موفق:', result);
+                        responseLog.innerHTML = `<div style="color: green; font-size: 14px;">✅ ورود موفقیت‌آمیز: ${result.user.fullName}</div>`;
+                        updateStatus();
+                        
+                        // مخفی کردن فرم ورود با شمارش معکوس
+                        let countdown = 2;
+                        responseLog.innerHTML += `<div id="countdown-message" style="font-size: 14px; margin-top: 5px;">فرم تا ${countdown} ثانیه دیگر بسته می‌شود...</div>`;
+                        
+                        const countdownInterval = setInterval(() => {
+                            countdown--;
+                            const countdownElement = document.getElementById('countdown-message');
+                            if (countdown > 0) {
+                                if(countdownElement) countdownElement.textContent = `فرم تا ${countdown} ثانیه دیگر بسته می‌شود...`;
+                            } else {
+                                clearInterval(countdownInterval);
+                                const loginForm = document.getElementById('loginForm');
+                                if (loginForm) loginForm.style.display = 'none';
+                            }
+                        }, 1000);
+                        
+                    } else {
+                        console.error('❌ ورود ناموفق:', result.message);
+                        responseLog.innerHTML = `<div style="color: red; font-size: 14px;">❌ خطا: ${result.message}</div>`;
+                    }
+                } else {
+                    throw new Error('xi2Auth در دسترس نیست');
+                }
+                
+            } catch (error) {
+                console.error('خطا در ورود:', error);
+                responseLog.innerHTML = `<div style="color: red; font-size: 14px;">❌ خطای شبکه: ${error.message}</div>`;
+            }
+            
+            submitBtn.textContent = 'ورود';
+            submitBtn.disabled = false;
+            isProcessing = false;
+        });
+
+        // به‌روزرسانی وضعیت
+        function updateStatus() {
+            const statusDiv = document.getElementById('currentStatus');
+            
+            if (window.xi2Auth) {
+                const user = window.xi2Auth.getCurrentUser();
+                if (user) {
+                    statusDiv.innerHTML = `<span class="status success">کاربر وارد شده: ${user.fullName} (${user.mobile})</span>`;
+                    
+                    // چک کردن که منوی کاربری اضافه شده یا نه
+                    const userMenu = document.querySelector('.user-menu');
+                    if (userMenu) {
+                        statusDiv.innerHTML += '<br><small style="color: green;">✅ منوی کاربری فعال</small>';
+                    } else {
+                        statusDiv.innerHTML += '<br><small style="color: orange;">⚠️ منوی کاربری در انتظار...</small>';
+                    }
+                    
+                } else {
+                    statusDiv.innerHTML = `<span class="status error">مهمان</span>`;
+                }
+            } else {
+                statusDiv.innerHTML = `<span class="status error">xi2Auth بارگذاری نشده</span>`;
+            }
+        }
+
+        // بررسی وضعیت هر 2 ثانیه
+        setInterval(updateStatus, 2000);
+
+        // تنظیمات اولیه
+        window.addEventListener('load', () => {
+            console.log('📱 صفحه تست ورود واقعی بارگذاری شد');
+            setTimeout(() => {
+                updateStatus();
+                if (window.xi2Auth) {
+                    console.log('✅ xi2Auth آماده است');
+                } else {
+                    console.error('❌ xi2Auth بارگذاری نشد');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

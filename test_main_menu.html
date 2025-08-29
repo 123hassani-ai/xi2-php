@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست منوی اصلی - زیتو</title>
+    <link rel="stylesheet" href="src/assets/css/main.css">
+    <link rel="stylesheet" href="src/assets/css/components.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Vazirmatn', sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-right: 8px;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .main-content {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            color: white;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            
+            .test-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .test-btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header شبیه صفحه اصلی -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎯 زیتو</h1>
+                    <span>Xi2</span>
+                </div>
+                <nav class="nav">
+                    <a href="#features" class="nav-link">ویژگی‌ها</a>
+                    <a href="#login" class="nav-link btn btn-outline" id="loginLink">ورود</a>
+                    <a href="#register" class="nav-link btn btn-primary" id="registerLink">شروع رایگان</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h2>🧪 تست منوی کاربری در صفحه اصلی</h2>
+            <p>این تست دقیقاً شبیه ساختار صفحه اصلی xi2.ir است</p>
+            
+            <div class="test-buttons">
+                <button onclick="simulateLogin()" class="test-btn" 
+                        style="background: #28a745;">
+                    🔑 شبیه‌سازی ورود
+                </button>
+                
+                <button onclick="simulateLogout()" class="test-btn" 
+                        style="background: #dc3545;">
+                    🚪 خروج
+                </button>
+                
+                <button onclick="testMobileView()" class="test-btn"
+                        style="background: #007bff;" id="mobileBtn">
+                    📱 حالت موبایل
+                </button>
+                
+                <button onclick="showUserInfo()" class="test-btn"
+                        style="background: #6f42c1;">
+                    👤 اطلاعات کاربر
+                </button>
+            </div>
+            
+            <div class="info-card">
+                <h3>وضعیت فعلی</h3>
+                <div id="userStatus">
+                    <span class="status error">مهمان</span>
+                </div>
+                
+                <div id="menuStatus" style="margin-top: 12px;">
+                    <strong>وضعیت منو:</strong> <span id="menuState">غیرفعال</span>
+                </div>
+                
+                <div id="viewportInfo" style="margin-top: 12px;">
+                    <strong>سایز صفحه:</strong> <span id="viewportSize">-</span>
+                </div>
+                
+                <div id="menuPosition" style="margin-top: 12px; font-size: 12px; color: #666;">
+                    <strong>موقعیت منو:</strong> <span id="positionDetails">-</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="src/assets/js/auth.js"></script>
+    <script>
+        let isMobileMode = false;
+
+        // شبیه‌سازی ورود
+        function simulateLogin() {
+            if (window.xi2Auth) {
+                const mockUser = {
+                    id: 123,
+                    fullName: 'علی احمدی',
+                    mobile: '09123456789',
+                    email: 'ali.ahmadi@example.com'
+                };
+                
+                // شبیه‌سازی token و localStorage
+                localStorage.setItem('xi2_token', 'mock-jwt-token-12345');
+                localStorage.setItem('xi2_user', JSON.stringify(mockUser));
+                
+                // به‌روزرسانی UI
+                window.xi2Auth.updateUIForLoggedInUser(mockUser);
+                updateStatus();
+                
+                console.log('✅ ورود شبیه‌سازی شد');
+            } else {
+                console.error('❌ xi2Auth در دسترس نیست');
+            }
+        }
+
+        // شبیه‌سازی خروج
+        function simulateLogout() {
+            if (window.xi2Auth) {
+                window.xi2Auth.logout();
+                updateStatus();
+                console.log('✅ خروج انجام شد');
+            }
+        }
+
+        // تغییر به حالت موبایل
+        function testMobileView() {
+            const body = document.body;
+            const btn = document.getElementById('mobileBtn');
+            
+            if (!isMobileMode) {
+                body.style.maxWidth = '375px';
+                body.style.margin = '0 auto';
+                body.style.border = '2px solid #007bff';
+                btn.textContent = '💻 حالت دسکتاپ';
+                btn.style.background = '#28a745';
+                isMobileMode = true;
+            } else {
+                body.style.maxWidth = '';
+                body.style.margin = '';
+                body.style.border = '';
+                btn.textContent = '📱 حالت موبایل';
+                btn.style.background = '#007bff';
+                isMobileMode = false;
+            }
+            
+            setTimeout(updateStatus, 100);
+        }
+
+        // نمایش اطلاعات کاربر
+        function showUserInfo() {
+            const user = window.xi2Auth ? window.xi2Auth.getCurrentUser() : null;
+            if (user) {
+                alert(`👤 کاربر وارد شده:\n\nنام: ${user.fullName}\nموبایل: ${user.mobile}\nایمیل: ${user.email || 'ندارد'}`);
+            } else {
+                alert('❌ هیچ کاربری وارد نشده است');
+            }
+        }
+
+        // به‌روزرسانی وضعیت
+        function updateStatus() {
+            const userStatus = document.getElementById('userStatus');
+            const menuState = document.getElementById('menuState');
+            const viewportSize = document.getElementById('viewportSize');
+            const positionDetails = document.getElementById('positionDetails');
+            
+            // وضعیت کاربر
+            const user = window.xi2Auth ? window.xi2Auth.getCurrentUser() : null;
+            if (user) {
+                userStatus.innerHTML = `<span class="status success">وارد شده: ${user.fullName}</span>`;
+            } else {
+                userStatus.innerHTML = `<span class="status error">مهمان</span>`;
+            }
+            
+            // وضعیت منو
+            const userMenu = document.querySelector('.user-menu');
+            if (userMenu) {
+                menuState.textContent = 'فعال ✅';
+                menuState.style.color = '#28a745';
+            } else {
+                menuState.textContent = 'غیرفعال ❌';
+                menuState.style.color = '#dc3545';
+            }
+            
+            // سایز viewport
+            const width = window.innerWidth;
+            viewportSize.textContent = `${width}px (${width <= 768 ? 'موبایل' : 'دسکتاپ'})`;
+            
+            // موقعیت منو
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                const rect = dropdown.getBoundingClientRect();
+                positionDetails.textContent = `راست: ${Math.round(rect.right)}px, چپ: ${Math.round(rect.left)}px, عرض: ${Math.round(rect.width)}px`;
+            } else {
+                positionDetails.textContent = '-';
+            }
+        }
+
+        // تنظیمات اولیه
+        window.addEventListener('load', () => {
+            updateStatus();
+            console.log('🚀 صفحه تست منوی اصلی آماده است');
+            
+            // چک خودکار وضعیت کاربر از localStorage
+            setTimeout(() => {
+                if (window.xi2Auth) {
+                    console.log('✅ xi2Auth بارگذاری شد');
+                    // اگر کاربر قبلاً login بوده، خودکار نمایش بده
+                    const existingUser = window.xi2Auth.getCurrentUser();
+                    if (existingUser) {
+                        console.log('📋 کاربر از قبل وارد شده:', existingUser.fullName);
+                        updateStatus();
+                    }
+                } else {
+                    console.error('❌ xi2Auth بارگذاری نشد');
+                }
+            }, 500);
+        });
+
+        window.addEventListener('resize', updateStatus);
+
+        // به‌روزرسانی هنگام کلیک
+        document.addEventListener('click', () => {
+            setTimeout(updateStatus, 50);
+        });
+
+        // نمایش وضعیت xi2Auth
+        setTimeout(() => {
+            if (window.xi2Auth) {
+                console.log('✅ xi2Auth بارگذاری شد');
+            } else {
+                console.error('❌ xi2Auth بارگذاری نشد');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

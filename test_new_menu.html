@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست منوی کاربری جدید - زیتو</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="src/assets/css/main.css">
+    <link rel="stylesheet" href="src/assets/css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        .demo-container {
+            padding: 100px 20px 20px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+        
+        .demo-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .demo-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .demo-btn:hover {
+            background: var(--gray-100);
+        }
+        
+        .status-box {
+            padding: 15px;
+            background: var(--gray-100);
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎯 زیتو</h1>
+                    <span>Xi2</span>
+                </div>
+                <nav class="nav">
+                    <a href="#features" class="nav-link">ویژگی‌ها</a>
+                    <a href="#login" class="nav-link btn btn-outline">ورود</a>
+                    <a href="#register" class="nav-link btn btn-primary">شروع رایگان</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="demo-container">
+        <div class="container">
+            <div class="demo-section">
+                <h1>🎨 تست منوی کاربری جدید</h1>
+                <p>این صفحه برای تست طراحی جدید منوی کاربری است.</p>
+                
+                <div class="demo-buttons">
+                    <button class="demo-btn" onclick="simulateLogin()">🔐 شبیه‌سازی لاگین</button>
+                    <button class="demo-btn" onclick="simulateLogout()">🚪 شبیه‌سازی خروج</button>
+                                <button onclick="toggleMobileView()" class="mobile-toggle" 
+                    style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-left: 10px;">
+                📱 نمایش موبایل
+            </button>
+            
+            <button onclick="testResponsive()" class="responsive-test"
+                    style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                🔄 تست رسپانسیو
+            </button>
+                </div>
+
+                <div class="status-box" id="statusBox">
+                    وضعیت: در انتظار...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="src/assets/js/auth.js"></script>
+    
+    <script>
+        function updateStatus(message) {
+            document.getElementById('statusBox').innerHTML = message;
+        }
+
+        function simulateLogin() {
+            const userData = {
+                id: 1,
+                fullName: "علی احمدی", 
+                mobile: "09123456789",
+                status: "active"
+            };
+            
+            const token = "demo_token_12345";
+            
+            // ذخیره در localStorage
+            localStorage.setItem('xi2_token', token);
+            localStorage.setItem('xi2_user', JSON.stringify(userData));
+            
+            // بروزرسانی UI
+            window.xi2Auth.updateUIForLoggedInUser(userData);
+            updateStatus(`✅ لاگین موفق
+👤 کاربر: ${userData.fullName}
+📱 موبایل: ${userData.mobile}
+🔑 Token: ${token.substring(0, 20)}...
+
+🎯 منوی کاربری در بالای صفحه نمایش داده شده است!`);
+        }
+
+        function simulateLogout() {
+            // پاک کردن localStorage
+            localStorage.removeItem('xi2_token');
+            localStorage.removeItem('xi2_user');
+            
+            // بروزرسانی UI
+            window.xi2Auth.updateUIForGuestUser();
+            updateStatus(`🚪 خروج موفق
+دکمه‌های "ورود" و "شروع رایگان" دوباره نمایش داده شدند.`);
+        }
+
+        function toggleMobileView() {
+            const body = document.body;
+            const button = document.querySelector('.mobile-toggle');
+            
+            if (body.style.maxWidth === '375px') {
+                // برگشت به حالت دسکتاپ
+                body.style.maxWidth = '';
+                body.style.margin = '';
+                body.style.border = '';
+                button.textContent = '📱 نمایش موبایل';
+                button.style.background = '#007bff';
+            } else {
+                // حالت موبایل
+                body.style.maxWidth = '375px';
+                body.style.margin = '0 auto';
+                body.style.border = '1px solid #ddd';
+                button.textContent = '💻 نمایش دسکتاپ';
+                button.style.background = '#28a745';
+            }
+        }
+
+        function testResponsive() {
+            const sizes = [
+                { width: 360, name: 'موبایل خیلی کوچک' },
+                { width: 375, name: 'iPhone SE' },
+                { width: 414, name: 'iPhone Plus' },
+                { width: 768, name: 'تبلت' },
+                { width: 1024, name: 'دسکتاپ کوچک' },
+                { width: 1200, name: 'دسکتاپ' }
+            ];
+            
+            let index = 0;
+            const testBtn = document.querySelector('.responsive-test');
+            
+            function nextSize() {
+                if (index >= sizes.length) {
+                    document.body.style.maxWidth = '';
+                    document.body.style.margin = '';
+                    document.body.style.border = '';
+                    testBtn.textContent = '🔄 تست رسپانسیو';
+                    index = 0;
+                    return;
+                }
+                
+                const size = sizes[index];
+                document.body.style.maxWidth = size.width + 'px';
+                document.body.style.margin = '0 auto';
+                document.body.style.border = '2px solid #007bff';
+                document.body.style.padding = '10px';
+                testBtn.textContent = `${size.name} (${size.width}px)`;
+                
+                index++;
+                setTimeout(nextSize, 2500);
+            }
+            
+            nextSize();
+        }
+
+        // بررسی وضعیت فعلی هنگام بارگذاری صفحه
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = window.xi2Auth.getCurrentUser();
+            if (user) {
+                window.xi2Auth.updateUIForLoggedInUser(user);
+                updateStatus(`📋 وضعیت فعلی: لاگین شده
+👤 ${user.fullName} - ${user.mobile}`);
+            } else {
+                updateStatus(`📋 وضعیت فعلی: مهمان
+برای مشاهده منوی کاربری، روی "شبیه‌سازی لاگین" کلیک کنید.`);
+            }
+        });
+
+        // نمایش لاگ کلیک‌ها در console
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.user-menu')) {
+                console.log('🖱️ کلیک روی منوی کاربری:', e.target);
+            }
+        });
+    </script>
+</body>
+</html>

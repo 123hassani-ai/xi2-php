@@ -5,28 +5,123 @@
 
 class Xi2Auth {
     constructor() {
-        this.API_BASE = '/xi2-01/src/api/auth/';
+        this.API_BASE = '/xi2.ir/src/api/auth/';
         this.currentMobile = null;
         this.otpTimer = null;
+        this.popperInstance = null; // برای Popper.js
+        this.userMenuTrigger = null;
+        this.userMenuDropdown = null;
         this.init();
+    }
+
+    // تبدیل اعداد فارسی/عربی به انگلیسی
+    convertPersianToEnglish(input) {
+        const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        
+        let result = input;
+        
+        // تبدیل اعداد فارسی
+        for (let i = 0; i < 10; i++) {
+            result = result.replace(new RegExp(persianNumbers[i], 'g'), englishNumbers[i]);
+            result = result.replace(new RegExp(arabicNumbers[i], 'g'), englishNumbers[i]);
+        }
+        
+        return result;
     }
 
     init() {
         this.setupOTPInputHandlers();
+        this.setupMobileInputHandlers();
         this.setupPasswordToggles();
         this.checkStoredAuth();
+        
+        // چک کردن وضعیت کاربر هنگام load صفحه
+        document.addEventListener('DOMContentLoaded', () => {
+            this.checkCurrentUserStatus();
+        });
+        
+        // اگر صفحه قبلاً load شده
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.checkCurrentUserStatus();
+            });
+        } else {
+            this.checkCurrentUserStatus();
+        }
+    }
+
+    checkCurrentUserStatus() {
+        const user = this.getCurrentUser();
+        const token = this.getToken();
+        
+        if (user && token) {
+            console.log('کاربر قبلاً وارد شده:', user.fullName);
+            this.updateUIForLoggedInUser(user);
+        } else {
+            console.log('کاربر وارد نشده');
+            this.updateUIForGuestUser();
+        }
+    }
+
+    setupMobileInputHandlers() {
+        // تمام فیلدهای موبایل
+        const mobileInputs = document.querySelectorAll('input[type="tel"], #loginMobile, #registerMobile, #mobile');
+        
+        mobileInputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                // تبدیل اعداد فارسی/عربی به انگلیسی
+                let value = this.convertPersianToEnglish(e.target.value);
+                
+                // فقط اجازه اعداد و علامت +
+                value = value.replace(/[^\d+]/g, '');
+                
+                // اگر با 0 شروع می‌شود و + ندارد، با 09 شروع کن
+                if (value.length > 0 && value[0] === '0' && !value.includes('+')) {
+                    // فرمت موبایل ایران
+                    if (value.length > 11) {
+                        value = value.substring(0, 11);
+                    }
+                }
+                
+                e.target.value = value;
+            });
+            
+            // پیست کردن شماره موبایل
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                let cleanNumber = this.convertPersianToEnglish(pastedText);
+                cleanNumber = cleanNumber.replace(/[^\d+]/g, '');
+                
+                // محدود کردن طول
+                if (cleanNumber.length > 11 && !cleanNumber.includes('+')) {
+                    cleanNumber = cleanNumber.substring(0, 11);
+                }
+                
+                input.value = cleanNumber;
+            });
+        });
     }
 
     setupOTPInputHandlers() {
         const otpInput = document.getElementById('otpCode');
         if (!otpInput) return;
 
-        // فقط اجازه عدد
+        // فقط اجازه عدد + تبدیل فارسی به انگلیسی
         otpInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '');
+            // تبدیل اعداد فارسی/عربی به انگلیسی
+            let value = this.convertPersianToEnglish(e.target.value);
+            // فقط اعداد
+            value = value.replace(/\D/g, '');
+            // محدود به 6 رقم
+            value = value.substring(0, 6);
+            
+            e.target.value = value;
             
             // اگر 6 رقم شد، خودکار submit کن
-            if (e.target.value.length === 6) {
+            if (value.length === 6) {
                 setTimeout(() => {
                     const form = e.target.closest('form');
                     form?.dispatchEvent(new Event('submit'));
@@ -38,7 +133,8 @@ class Xi2Auth {
         otpInput.addEventListener('paste', (e) => {
             e.preventDefault();
             const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-            const numbers = pastedText.replace(/\D/g, '').substring(0, 6);
+            let numbers = this.convertPersianToEnglish(pastedText);
+            numbers = numbers.replace(/\D/g, '').substring(0, 6);
             otpInput.value = numbers;
             
             if (numbers.length === 6) {
@@ -166,7 +262,7 @@ class Xi2Auth {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    fullName: fullName,
+                    name: fullName,  // تغییر از fullName به name
                     mobile: mobile,
                     password: password
                 })
@@ -272,7 +368,7 @@ class Xi2Auth {
         } finally {
             this.clearStoredAuth();
             this.updateUIForGuestUser();
-            window.location.reload();
+            // window.location.reload(); // این خط حذف شد تا صفحه رفرش نشود
         }
     }
 
@@ -346,78 +442,146 @@ class Xi2Auth {
         localStorage.removeItem('xi2_token');
         localStorage.removeItem('xi2_user');
         localStorage.removeItem('xi2_login_time');
-    }
-
-    updateUIForLoggedInUser(user) {
-        // بروزرسانی نام کاربر
-        const userNameElements = document.querySelectorAll('.user-name');
-        userNameElements.forEach(el => el.textContent = user.fullName);
         
-        // نمایش بخش‌های کاربر وارد شده
-        const authElements = document.querySelectorAll('.auth-required');
-        authElements.forEach(el => el.style.display = 'block');
-        
-        // مخفی کردن بخش‌های مهمان
-        const guestElements = document.querySelectorAll('.guest-only');
-        guestElements.forEach(el => el.style.display = 'none');
-        
-        // اضافه کردن منوی کاربر
-        this.addUserMenu(user);
-    }
-
-    updateUIForGuestUser() {
-        // مخفی کردن بخش‌های کاربر وارد شده
-        const authElements = document.querySelectorAll('.auth-required');
-        authElements.forEach(el => el.style.display = 'none');
-        
-        // نمایش بخش‌های مهمان
-        const guestElements = document.querySelectorAll('.guest-only');
-        guestElements.forEach(el => el.style.display = 'block');
-        
-        // حذف منوی کاربر
-        const userMenu = document.querySelector('.user-menu');
-        if (userMenu) {
-            userMenu.remove();
+        // از بین بردن نمونه Popper
+        if (this.popperInstance) {
+            this.popperInstance.destroy();
+            this.popperInstance = null;
         }
     }
 
-    addUserMenu(user) {
-        // حذف منوی قبلی
+    updateUIForLoggedInUser(user) {
+        const navButtons = document.getElementById('nav-buttons');
+        if (navButtons) {
+            // پاک کردن دکمه‌های ورود/ثبت‌نام
+            navButtons.innerHTML = '';
+            // اضافه کردن منوی کاربر
+            this.addUserMenu(user, navButtons);
+        } else {
+            console.warn('Container #nav-buttons not found.');
+        }
+    }
+
+    updateUIForGuestUser() {
+        // حذف منوی کاربر
+        const existingMenu = document.querySelector('.user-menu');
+        if (existingMenu) {
+            existingMenu.remove();
+        }
+
+        // از بین بردن نمونه Popper
+        if (this.popperInstance) {
+            this.popperInstance.destroy();
+            this.popperInstance = null;
+        }
+
+        const navButtons = document.getElementById('nav-buttons');
+        if (navButtons) {
+            // نمایش دکمه‌های ورود و ثبت‌نام
+            navButtons.innerHTML = `
+                <a href="#login" class="btn btn-secondary" onclick="window.xi2App.showLoginModal(); return false;">ورود</a>
+                <a href="#register" class="btn btn-primary" onclick="window.xi2App.showRegisterModal(); return false;">شروع رایگان</a>
+            `;
+        }
+    }
+
+    addUserMenu(user, container) {
+        // حذف منوی قبلی برای اطمینان
         const existingMenu = document.querySelector('.user-menu');
         if (existingMenu) {
             existingMenu.remove();
         }
         
-        // ایجاد منوی جدید
         const menuHTML = `
             <div class="user-menu">
-                <div class="user-info">
+                <div class="user-trigger" id="userMenuTrigger">
                     <div class="user-avatar">
-                        ${user.fullName.charAt(0)}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="fill: currentColor;">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
                     </div>
-                    <div class="user-details">
-                        <div class="user-name">${user.fullName}</div>
-                        <div class="user-mobile">${user.mobile}</div>
-                    </div>
+                    <span class="user-name">${user.fullName}</span>
+                    <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
-                <div class="user-actions">
-                    <button onclick="window.xi2App.showSection('gallery')" class="menu-item">
-                        📁 گالری من
-                    </button>
-                    <button onclick="window.xi2App.showSection('profile')" class="menu-item">
-                        ⚙️ تنظیمات
-                    </button>
-                    <button onclick="window.xi2Auth.confirmLogout()" class="menu-item logout-btn">
-                        🚪 خروج
-                    </button>
+                
+                <div class="user-dropdown" id="userDropdown" role="menu">
+                    <!-- Content is the same as before -->
+                    <div class="dropdown-header">
+                        <div class="user-info">
+                            <div class="user-avatar-large">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="fill: currentColor;">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-fullname">${user.fullName}</div>
+                                <div class="user-mobile">${user.mobile}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dropdown-menu">
+                        <a href="#" class="menu-item" role="menuitem">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="fill: currentColor;"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                            <span>پنل کاربری</span>
+                        </a>
+                        <div class="menu-divider"></div>
+                        <a href="#" class="menu-item logout" role="menuitem" onclick="window.xi2Auth.confirmLogout(); return false;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="fill: currentColor;"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                            <span>خروج</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         `;
         
-        // اضافه کردن به header
-        const header = document.querySelector('.app-header');
-        if (header) {
-            header.insertAdjacentHTML('beforeend', menuHTML);
+        container.innerHTML = menuHTML;
+        
+        this.userMenuTrigger = document.getElementById('userMenuTrigger');
+        this.userMenuDropdown = document.getElementById('userDropdown');
+
+        if (this.userMenuTrigger && this.userMenuDropdown) {
+            this.popperInstance = Popper.createPopper(this.userMenuTrigger, this.userMenuDropdown, {
+                placement: 'bottom-end',
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 8],
+                        },
+                    },
+                    {
+                        name: 'preventOverflow',
+                        options: {
+                            padding: 16,
+                        },
+                    },
+                ],
+            });
+
+            this.userMenuTrigger.addEventListener('click', () => this.toggleUserDropdown());
+            document.addEventListener('click', (event) => this.handleOutsideClick(event));
+        }
+    }
+
+    toggleUserDropdown() {
+        if (!this.userMenuDropdown) return;
+        
+        const isVisible = this.userMenuDropdown.classList.contains('show');
+        
+        if (isVisible) {
+            this.userMenuDropdown.classList.remove('show');
+        } else {
+            this.userMenuDropdown.classList.add('show');
+            this.popperInstance.update();
+        }
+    }
+
+    handleOutsideClick(event) {
+        if (this.userMenuTrigger && !this.userMenuTrigger.contains(event.target) && this.userMenuDropdown) {
+            this.userMenuDropdown.classList.remove('show');
         }
     }
 
@@ -441,129 +605,5 @@ class Xi2Auth {
     }
 }
 
-// راه‌اندازی سراسری
-document.addEventListener('DOMContentLoaded', () => {
-    window.xi2Auth = new Xi2Auth();
-});
-
-// استایل‌های CSS برای احراز هویت
-const authStyles = document.createElement('style');
-authStyles.textContent = `
-.password-toggle {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    z-index: 2;
-}
-
-.user-menu {
-    position: fixed;
-    top: 70px;
-    right: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    min-width: 250px;
-    z-index: 1000;
-    overflow: hidden;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    background: linear-gradient(135deg, #6366f1, #ec4899);
-    color: white;
-}
-
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    margin-left: 12px;
-}
-
-.user-details {
-    flex: 1;
-}
-
-.user-name {
-    font-weight: bold;
-    margin-bottom: 4px;
-}
-
-.user-mobile {
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-.user-actions {
-    padding: 8px 0;
-}
-
-.menu-item {
-    width: 100%;
-    padding: 12px 16px;
-    border: none;
-    background: none;
-    text-align: right;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-}
-
-.menu-item:hover {
-    background-color: #f3f4f6;
-}
-
-.logout-btn {
-    color: #ef4444;
-    border-top: 1px solid #e5e7eb;
-}
-
-.logout-btn:hover {
-    background-color: #fef2f2;
-}
-
-.otp-timer {
-    font-weight: bold;
-    color: #6366f1;
-    font-size: 16px;
-    margin: 8px 0;
-}
-
-.resend-otp-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.auth-required {
-    display: none;
-}
-
-.guest-only {
-    display: block;
-}
-
-@media (max-width: 768px) {
-    .user-menu {
-        right: 10px;
-        left: 10px;
-        top: 60px;
-    }
-}
-`;
-document.head.appendChild(authStyles);
+// تنظیم global variable
+window.xi2Auth = new Xi2Auth();

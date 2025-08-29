@@ -98,17 +98,41 @@ try {
     $fileName = uniqid('xi2_') . '_' . time() . '.' . $extension;
     $shortLink = generateShortLink();
     
-    // مسیر ذخیره‌سازی
-    $storagePath = __DIR__ . '/../../storage/uploads/';
-    $uploadPath = $storagePath . date('Y/m/d/');
+    // مسیر ذخیره‌سازی بر اساس شناسه کاربر
+    $storagePath = __DIR__ . '/../../../storage/uploads/';
+    $userPath = $storagePath . 'user_' . $userId . '/';
     
-    // ایجاد پوشه در صورت عدم وجود
-    if (!is_dir($uploadPath)) {
-        mkdir($uploadPath, 0755, true);
+    // ایجاد پوشه کاربر در صورت عدم وجود
+    if (!is_dir($userPath)) {
+        if (!@mkdir($userPath, 0777, true)) {
+            $userPath = '/tmp/xi2_user_' . $userId . '/';
+            if (!is_dir($userPath)) {
+                mkdir($userPath, 0777, true);
+            }
+            $relativePath = 'tmp/xi2_user_' . $userId . '/' . $fileName;
+        } else {
+            chmod($userPath, 0777);
+            $relativePath = 'storage/uploads/user_' . $userId . '/' . $fileName;
+        }
+    } else {
+        // پوشه وجود دارد - بررسی کنیم که قابل نوشتن است
+        if (!is_writable($userPath)) {
+            chmod($userPath, 0777);
+        }
+        
+        // اگر هنوز هم نمی‌توان نوشت، از tmp استفاده کن
+        if (!is_writable($userPath)) {
+            $userPath = '/tmp/xi2_user_' . $userId . '/';
+            if (!is_dir($userPath)) {
+                mkdir($userPath, 0777, true);
+            }
+            $relativePath = 'tmp/xi2_user_' . $userId . '/' . $fileName;
+        } else {
+            $relativePath = 'storage/uploads/user_' . $userId . '/' . $fileName;
+        }
     }
     
-    $filePath = $uploadPath . $fileName;
-    $relativePath = 'storage/uploads/' . date('Y/m/d/') . $fileName;
+    $filePath = $userPath . $fileName;
     
     // انتقال فایل
     if (!move_uploaded_file($file['tmp_name'], $filePath)) {

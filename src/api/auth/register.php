@@ -59,10 +59,10 @@ try {
     // رمزگذاری پسورد
     $hashedPassword = ApiManager::hashPassword($password);
     
-    // ثبت کاربر جدید
+    // ثبت کاربر جدید (فعلاً بدون نیاز به OTP)
     $stmt = $db->prepare("
         INSERT INTO users (full_name, mobile, password_hash, otp_code, otp_expires, status, level, created_at) 
-        VALUES (?, ?, ?, ?, ?, 'inactive', 1, NOW())
+        VALUES (?, ?, ?, ?, ?, 'active', 1, NOW())
     ");
     
     $result = $stmt->execute([

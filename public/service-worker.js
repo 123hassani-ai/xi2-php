@@ -3,29 +3,20 @@
  * PWA و مدیریت cache آفلاین
  */
 
-const CACHE_NAME = 'xi2-v1.0.0';
-const STATIC_CACHE = 'xi2-static-v1';
-const DYNAMIC_CACHE = 'xi2-dynamic-v1';
+const CACHE_NAME = 'xi2-v1.0.3';
+const STATIC_CACHE = 'xi2-static-v1.3';
+const DYNAMIC_CACHE = 'xi2-dynamic-v1.3';
 
-// فایل‌های استاتیک برای کش
+// فایل‌های استاتیک برای کش - لیست کوتاه‌تر برای تست
 const STATIC_FILES = [
-    '/',
-    '/index.html',
-    '/manifest.json',
-    '/src/assets/css/main.css',
-    '/src/assets/css/components.css',
-    '/src/assets/js/main.js',
-    '/src/assets/js/upload.js',
-    '/src/assets/js/auth.js',
-    // فونت‌ها
-    'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap',
-    // آیکون‌های offline
-    '/src/assets/images/offline.png'
+    './',
+    './index.html',
+    './manifest.json'
 ];
 
 // فایل‌هایی که نباید کش شوند
 const EXCLUDED_URLS = [
-    '/src/api/',
+    '../src/api/',
     '/admin/',
     'chrome-extension://'
 ];
@@ -418,4 +409,4 @@ self.addEventListener('notificationclick', (event) => {
     );
 });
 
-console.log('🎯 زیتو Service Worker آماده است!');
+// Service Worker آماده است - حالت silent

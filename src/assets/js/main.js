@@ -5,8 +5,25 @@
 
 class Xi2App {
     constructor() {
-        this.API_BASE = '/xi2-01/src/api/';
+        this.API_BASE = '/xi2.ir/src/api/';
         this.init();
+    }
+
+    // تبدیل اعداد فارسی/عربی به انگلیسی
+    convertPersianToEnglish(input) {
+        const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        
+        let result = input;
+        
+        // تبدیل اعداد فارسی
+        for (let i = 0; i < 10; i++) {
+            result = result.replace(new RegExp(persianNumbers[i], 'g'), englishNumbers[i]);
+            result = result.replace(new RegExp(arabicNumbers[i], 'g'), englishNumbers[i]);
+        }
+        
+        return result;
     }
 
     init() {
@@ -22,6 +39,9 @@ class Xi2App {
         // مدیریت فرم‌ها
         this.setupAuthForms();
         
+        // مدیریت input های عددی (موبایل/OTP)
+        this.setupNumericInputs();
+        
         // مدیریت نوتیفیکیشن‌ها
         this.setupNotifications();
         
@@ -31,8 +51,8 @@ class Xi2App {
 
     setupModalHandlers() {
         const modal = document.getElementById('authModal');
-        const loginLink = document.querySelector('a[href="#login"]');
-        const registerLink = document.querySelector('a[href="#register"]');
+        const loginLink = document.getElementById('login-btn-header');
+        const registerLink = document.getElementById('register-btn-header');
         const closeModal = document.getElementById('closeModal');
         const showRegister = document.getElementById('showRegister');
         const showLogin = document.getElementById('showLogin');
@@ -110,6 +130,89 @@ class Xi2App {
         });
     }
 
+    setupNumericInputs() {
+        // تمام فیلدهای موبایل
+        const mobileInputs = document.querySelectorAll('input[type="tel"], #loginMobile, #registerMobile, #mobile');
+        
+        mobileInputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                // تبدیل اعداد فارسی/عربی به انگلیسی
+                let value = this.convertPersianToEnglish(e.target.value);
+                
+                // فقط اجازه اعداد
+                value = value.replace(/[^\d]/g, '');
+                
+                // محدود به 11 رقم برای موبایل ایران
+                if (value.length > 11) {
+                    value = value.substring(0, 11);
+                }
+                
+                e.target.value = value;
+            });
+            
+            // پیست کردن شماره موبایل
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                let cleanNumber = this.convertPersianToEnglish(pastedText);
+                cleanNumber = cleanNumber.replace(/[^\d]/g, '');
+                
+                // محدود کردن طول
+                if (cleanNumber.length > 11) {
+                    cleanNumber = cleanNumber.substring(0, 11);
+                }
+                
+                input.value = cleanNumber;
+            });
+        });
+
+        // فیلدهای OTP
+        const otpInputs = document.querySelectorAll('#otpCode, input[maxlength="6"]');
+        
+        otpInputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                // تبدیل اعداد فارسی/عربی به انگلیسی
+                let value = this.convertPersianToEnglish(e.target.value);
+                // فقط اعداد
+                value = value.replace(/\D/g, '');
+                // محدود به 6 رقم
+                value = value.substring(0, 6);
+                
+                e.target.value = value;
+                
+                // اگر 6 رقم شد، خودکار submit کن
+                if (value.length === 6) {
+                    setTimeout(() => {
+                        const form = e.target.closest('form');
+                        if (form) {
+                            const event = new Event('submit', { bubbles: true, cancelable: true });
+                            form.dispatchEvent(event);
+                        }
+                    }, 500);
+                }
+            });
+
+            // پیست کردن کد OTP
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                let numbers = this.convertPersianToEnglish(pastedText);
+                numbers = numbers.replace(/\D/g, '').substring(0, 6);
+                input.value = numbers;
+                
+                if (numbers.length === 6) {
+                    setTimeout(() => {
+                        const form = input.closest('form');
+                        if (form) {
+                            const event = new Event('submit', { bubbles: true, cancelable: true });
+                            form.dispatchEvent(event);
+                        }
+                    }, 500);
+                }
+            });
+        });
+    }
+
     setupNotifications() {
         // حذف نوتیفیکیشن‌های موجود بعد از مدتی
         setTimeout(() => {
@@ -126,20 +229,16 @@ class Xi2App {
         mediaQuery.addListener(this.handleThemeChange.bind(this));
     }
 
-    initPWA() {
-        // راه‌اندازی PWA
+    async initPWA() {
         if ('serviceWorker' in navigator) {
             this.registerServiceWorker();
         }
-
-        // مدیریت نصب PWA
-        this.handlePWAInstall();
     }
 
     async registerServiceWorker() {
         try {
-            const registration = await navigator.serviceWorker.register('/xi2-01/public/service-worker.js');
-            console.log('✅ Service Worker ثبت شد:', registration);
+            const registration = await navigator.serviceWorker.register('./service-worker.js');
+            // Service Worker successfully registered - silent mode
         } catch (error) {
             console.error('❌ خطا در ثبت Service Worker:', error);
         }
@@ -186,6 +285,14 @@ class Xi2App {
         const modal = document.getElementById('authModal');
         modal?.classList.add('active');
         this.showForm(type);
+    }
+
+    showLoginModal() {
+        this.showModal('login');
+    }
+
+    showRegisterModal() {
+        this.showModal('register');
     }
 
     hideModal() {

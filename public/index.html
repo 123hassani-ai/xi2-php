@@ -30,15 +30,17 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                                <div class="logo">
                     <h1>🎯 زیتو</h1>
                     <span>Xi2</span>
                 </div>
-                <nav class="nav">
-                    <a href="#features" class="nav-link">ویژگی‌ها</a>
-                    <a href="#login" class="nav-link btn btn-outline">ورود</a>
-                    <a href="#register" class="nav-link btn btn-primary">شروع رایگان</a>
+                <nav class="nav" id="nav-buttons">
+                    <a href="#login" id="login-btn-header" class="nav-link btn btn-outline" onclick="event.preventDefault(); setTimeout(function(){window.xi2App.showLoginModal();}, 100);">ورود</a>
+                    <a href="#register" id="register-btn-header" class="nav-link btn btn-primary" onclick="event.preventDefault(); setTimeout(function(){window.xi2App.showRegisterModal();}, 100);">شروع رایگان</a>
                 </nav>
+            </div>
+        </div>
+    </header>
             </div>
         </div>
     </header>
@@ -215,22 +217,10 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="../src/assets/js/main.js"></script>
     <script src="../src/assets/js/upload.js"></script>
     <script src="../src/assets/js/auth.js"></script>
-    <script>
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then((registration) => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
-    </script>
+    <!-- Service Worker registration is handled in main.js -->
 </body>
 </html>
