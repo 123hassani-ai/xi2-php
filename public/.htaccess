@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# API Routes
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^api/(.*)$ /src/api/$1 [L]
+
+# Static assets
+RewriteCond %{REQUEST_URI} ^/(src|public)/
+RewriteRule ^(.*)$ /$1 [L]
+
+# All other requests to index.html (SPA)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L]

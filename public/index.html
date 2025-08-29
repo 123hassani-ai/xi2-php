@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="زیتو - پلتفرم هوشمند اشتراک‌گذاری و مدیریت تصاویر">
+    <meta name="keywords" content="آپلود تصویر، اشتراک گذاری، تصویر، زیتو، xi2">
+    <meta name="author" content="Xi2 Team">
+    <meta name="theme-color" content="#6366F1">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="../src/assets/images/icon-192.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../src/assets/css/main.css">
+    <link rel="stylesheet" href="../src/assets/css/components.css">
+    
+    <title>زیتو | تصاویرتان را رها کنید</title>
+</head>
+<body class="landing">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎯 زیتو</h1>
+                    <span>Xi2</span>
+                </div>
+                <nav class="nav">
+                    <a href="#features" class="nav-link">ویژگی‌ها</a>
+                    <a href="#login" class="nav-link btn btn-outline">ورود</a>
+                    <a href="#register" class="nav-link btn btn-primary">شروع رایگان</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">تصاویرتان را رها کنید</h2>
+                <p class="hero-subtitle">
+                    ساده‌ترین و سریع‌ترین راه برای آپلود، مدیریت و اشتراک‌گذاری تصاویر
+                </p>
+                
+                <!-- Upload Zone -->
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-content">
+                        <div class="upload-icon">📸</div>
+                        <h3>منطقه آپلود</h3>
+                        <p>تصویر را اینجا رها کنید یا کلیک کنید</p>
+                        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                        <div class="upload-actions">
+                            <button class="btn btn-primary" id="selectFiles">انتخاب فایل</button>
+                            <button class="btn btn-secondary" id="takePhoto">📷 عکس بگیرید</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p id="progressText">در حال آپلود...</p>
+                </div>
+
+                <!-- Result -->
+                <div class="upload-result" id="uploadResult" style="display: none;">
+                    <div class="result-success">
+                        <div class="success-icon">✅</div>
+                        <h3>عالی! تصویرتان آماده است</h3>
+                        <div class="result-actions">
+                            <input type="text" id="shareLink" readonly>
+                            <button class="btn btn-primary" id="copyLink">کپی لینک</button>
+                            <button class="btn btn-secondary" id="shareWhatsApp">واتساپ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">چرا زیتو؟</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>سرعت بالا</h3>
+                    <p>آپلود فوری با CDN بومی</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>امنیت کامل</h3>
+                    <p>رمزنگاری و محافظت از حریم خصوصی</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>موبایل فریندلی</h3>
+                    <p>PWA و قابلیت آفلاین</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>ویرایش آسان</h3>
+                    <p>برش، فشرده‌سازی و بهینه‌سازی</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            
+            <!-- Login Form -->
+            <div class="auth-form" id="loginForm">
+                <h2>ورود به زیتو</h2>
+                <form>
+                    <div class="form-group">
+                        <label>شماره موبایل</label>
+                        <input type="tel" id="loginMobile" placeholder="09123456789" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رمز عبور</label>
+                        <input type="password" id="loginPassword" placeholder="رمز عبور" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">ورود</button>
+                </form>
+                <p class="auth-switch">
+                    حساب ندارید؟ <a href="#" id="showRegister">ثبت‌نام کنید</a>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm" style="display: none;">
+                <h2>ثبت‌نام در زیتو</h2>
+                <form>
+                    <div class="form-group">
+                        <label>نام و نام خانوادگی</label>
+                        <input type="text" id="registerName" placeholder="نام شما" required>
+                    </div>
+                    <div class="form-group">
+                        <label>شماره موبایل</label>
+                        <input type="tel" id="registerMobile" placeholder="09123456789" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رمز عبور</label>
+                        <input type="password" id="registerPassword" placeholder="رمز عبور" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">ثبت‌نام</button>
+                </form>
+                <p class="auth-switch">
+                    حساب دارید؟ <a href="#" id="showLogin">وارد شوید</a>
+                </p>
+            </div>
+
+            <!-- OTP Verification -->
+            <div class="auth-form" id="otpForm" style="display: none;">
+                <h2>تایید شماره موبایل</h2>
+                <p>کد تایید به شماره <span id="otpMobile"></span> ارسال شد</p>
+                <form>
+                    <div class="form-group">
+                        <label>کد تایید</label>
+                        <input type="text" id="otpCode" placeholder="کد 6 رقمی" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">تایید</button>
+                </form>
+                <p class="auth-switch">
+                    <a href="#" id="resendOTP">ارسال مجدد کد</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🎯 زیتو</h3>
+                    <p>پلتفرم هوشمند اشتراک‌گذاری تصاویر</p>
+                </div>
+                <div class="footer-section">
+                    <h4>لینک‌های مفید</h4>
+                    <ul>
+                        <li><a href="#features">ویژگی‌ها</a></li>
+                        <li><a href="#pricing">قیمت‌ها</a></li>
+                        <li><a href="#support">پشتیبانی</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>قوانین</h4>
+                    <ul>
+                        <li><a href="#privacy">حریم خصوصی</a></li>
+                        <li><a href="#terms">شرایط استفاده</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 زیتو (Xi2). تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../src/assets/js/main.js"></script>
+    <script src="../src/assets/js/upload.js"></script>
+    <script src="../src/assets/js/auth.js"></script>
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

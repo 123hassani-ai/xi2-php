@@ -1,0 +1,104 @@
+# .gitignore برای زیتو (Xi2)
+
+# فایل‌های سیستم عامل
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# محیط توسعه
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# لاگ‌ها
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# فایل‌های موقت
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# پوشه‌های node_modules (اگر در آینده اضافه شود)
+node_modules/
+npm-debug.log
+
+# فایل‌های PHP Cache
+*.cache
+opcache/
+
+# فایل‌های آپلود شده
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+# فایل‌های کش
+storage/cache/*
+!storage/cache/.gitkeep
+
+# لاگ فایل‌ها
+storage/logs/*
+!storage/logs/.gitkeep
+
+# فایل‌های کانفیگ محلی
+config/local.php
+.env
+.env.local
+.env.*.local
+
+# پایگاه داده
+*.sql
+*.sqlite
+*.db
+
+# فایل‌های backup
+backup/
+*.backup
+*.bak
+
+# فایل‌های فشرده
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# فایل‌های مخصوص IDE
+*.sublime-project
+*.sublime-workspace
+
+# فایل‌های composer (اگر در آینده اضافه شود)
+/vendor/
+composer.lock
+
+# فایل‌های thumbnails
+thumbs/
+thumbnails/
+
+# فایل‌های session
+sessions/
+*.sess
+
+# فایل‌های خطا
+error.log
+error_log
+php_errors.log
+
+# فایل‌های امنیتی
+*.pem
+*.key
+*.crt
+secrets.txt
+
+# فایل‌های تست
+test_uploads/
+phpunit.xml
+.phpunit.result.cache
