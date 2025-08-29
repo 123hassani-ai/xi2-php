@@ -74,25 +74,16 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$/',
     <meta name="author" content="Xi2 Team">
     <meta name="theme-color" content="#6366F1">
     
+    <!-- مدیریت خودکار مسیرها -->
+    <script src="/xi2.ir/src/assets/js/path-resolver.js"></script>
+    
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="src/assets/images/icon-192.png">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="src/assets/css/main.css">
-    <link rel="stylesheet" href="src/assets/css/components.css">
+    <link rel="apple-touch-icon" href="/xi2.ir/src/assets/images/icon-192.png">
     
     <style>
-        /* Load Persian font locally as fallback */
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap');
-        
         /* اصلاحات سریع UI */
         * {
             margin: 0;
@@ -682,9 +673,6 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$/',
     </footer>
 
     <!-- Scripts -->
-    <script src="src/assets/js/main.js"></script>
-    <script src="src/assets/js/upload.js"></script>
-    <script src="src/assets/js/auth.js"></script>
     <script>
         // Register Service Worker
         if ('serviceWorker' in navigator) {

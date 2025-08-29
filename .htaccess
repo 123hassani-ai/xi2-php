@@ -1,0 +1,93 @@
+# زیتو (Xi2) - تنظیمات Apache اصلی
+
+# فعال کردن mod_rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # هدایت به پوشه public
+    RewriteCond %{REQUEST_URI} !^/xi2\.ir/public/
+    RewriteCond %{REQUEST_URI} !^/xi2\.ir/src/
+    RewriteCond %{REQUEST_URI} !^/xi2\.ir/storage/
+    RewriteRule ^(.*)$ /xi2.ir/public/$1 [L,QSA]
+</IfModule>
+
+# تنظیم MIME Types
+<IfModule mod_mime.c>
+    # فونت‌ها
+    AddType font/woff2 .woff2
+    AddType font/woff .woff
+    AddType font/ttf .ttf
+    AddType font/otf .otf
+    AddType application/font-woff2 .woff2
+    AddType application/font-woff .woff
+    
+    # تصاویر
+    AddType image/webp .webp
+    AddType image/svg+xml .svg
+    
+    # JavaScript و CSS
+    AddType application/javascript .js
+    AddType text/css .css
+</IfModule>
+
+# تنظیم Cache
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # فونت‌ها - 1 سال
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    
+    # تصاویر - 1 ماه
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    
+    # CSS و JS - 1 هفته
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+</IfModule>
+
+# تنظیم CORS
+<IfModule mod_headers.c>
+    # فونت‌ها
+    <FilesMatch "\.(woff2?|ttf|eot|otf)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+        Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept"
+    </FilesMatch>
+    
+    # API Headers
+    <FilesMatch "\.php$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    </FilesMatch>
+</IfModule>
+
+# امنیت
+<Files ".htaccess">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# غیرفعال کردن Directory Browsing
+Options -Indexes
+
+# فعال کردن FollowSymLinks
+Options +FollowSymLinks
+
+# تنظیم اندکس پیش‌فرض
+DirectoryIndex index.php index.html

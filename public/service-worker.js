@@ -3,15 +3,25 @@
  * PWA و مدیریت cache آفلاین
  */
 
-const CACHE_NAME = 'xi2-v1.0.3';
-const STATIC_CACHE = 'xi2-static-v1.3';
-const DYNAMIC_CACHE = 'xi2-dynamic-v1.3';
+const CACHE_NAME = 'xi2-v1.0.5';
+const STATIC_CACHE = 'xi2-static-v1.5';
+const DYNAMIC_CACHE = 'xi2-dynamic-v1.5';
 
-// فایل‌های استاتیک برای کش - لیست کوتاه‌تر برای تست
+// فایل‌های استاتیک برای کش - شامل فونت‌های محلی
 const STATIC_FILES = [
     './',
     './index.html',
-    './manifest.json'
+    './manifest.json',
+    '/xi2.ir/src/assets/css/fonts.css',
+    '/xi2.ir/src/assets/css/main.css',
+    '/xi2.ir/src/assets/css/components.css',
+    '/xi2.ir/src/assets/js/main.js',
+    '/xi2.ir/src/assets/js/auth.js',
+    '/xi2.ir/src/assets/js/upload.js',
+    '/xi2.ir/src/assets/fonts/Vazirmatn-Regular.woff2',
+    '/xi2.ir/src/assets/fonts/Vazirmatn-Light.woff2',
+    '/xi2.ir/src/assets/fonts/Vazirmatn-Bold.woff2',
+    '/xi2.ir/src/assets/fonts/Vazirmatn-Variable.woff2'
 ];
 
 // فایل‌هایی که نباید کش شوند

@@ -1,0 +1,45 @@
+# زیتو (Xi2) - تنظیمات Apache برای فونت‌ها
+
+# اجازه دسترسی به همه فایل‌ها
+<Files "*">
+    Order allow,deny
+    Allow from all
+    Require all granted
+</Files>
+
+# تنظیم MIME Types برای فونت‌ها
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+    AddType font/woff .woff
+    AddType application/font-woff2 .woff2
+    AddType application/font-woff .woff
+    AddType application/x-font-woff2 .woff2
+    AddType application/x-font-woff .woff
+</IfModule>
+
+# تنظیم Cache برای فونت‌ها
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+</IfModule>
+
+# تنظیم CORS برای فونت‌ها
+<IfModule mod_headers.c>
+    <FilesMatch "\.(woff2?|ttf|eot|otf)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+        Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept"
+    </FilesMatch>
+</IfModule>
+
+# غیرفعال کردن Directory Browsing
+Options -Indexes
+
+# حفاظت از فایل‌های حساس
+<Files ".htaccess">
+    Order allow,deny
+    Deny from all
+</Files>

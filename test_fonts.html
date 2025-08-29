@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست فونت‌های محلی - زیتو</title>
+    <link rel="stylesheet" href="src/assets/css/fonts.css">
+    <style>
+        body {
+            margin: 20px;
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .font-test {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #6366F1;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #374151;
+            margin-bottom: 15px;
+        }
+        .sample-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .weight-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .weight-item {
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎯 تست فونت‌های محلی زیتو</h1>
+        
+        <div class="font-test">
+            <h2>فونت پایه (Vazirmatn Regular)</h2>
+            <p class="sample-text" style="font-family: 'Vazirmatn', sans-serif;">
+                سلام! این متن با استفاده از فونت محلی Vazirmatn نمایش داده می‌شود.
+                <br>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </p>
+            <p style="font-size: 14px; color: #666;">
+                فونت: Vazirmatn Regular از فایل محلی
+            </p>
+        </div>
+
+        <div class="font-test">
+            <h2>وزن‌های مختلف فونت</h2>
+            <div class="weight-demo">
+                <div class="weight-item font-light">
+                    <strong>Light (300)</strong><br>
+                    متن نمونه فارسی
+                </div>
+                <div class="weight-item font-normal">
+                    <strong>Regular (400)</strong><br>
+                    متن نمونه فارسی
+                </div>
+                <div class="weight-item font-bold">
+                    <strong>Bold (700)</strong><br>
+                    متن نمونه فارسی
+                </div>
+            </div>
+        </div>
+
+        <div class="font-test">
+            <h2>فونت Variable</h2>
+            <div class="font-variable">
+                <p style="font-weight: 200;">وزن 200: متن بسیار نازک</p>
+                <p style="font-weight: 400;">وزن 400: متن عادی</p>
+                <p style="font-weight: 600;">وزن 600: متن نیمه‌پررنگ</p>
+                <p style="font-weight: 800;">وزن 800: متن پررنگ</p>
+            </div>
+        </div>
+
+        <div class="font-test">
+            <h2>نمونه محتوای برنامه</h2>
+            <div style="font-family: 'Vazirmatn', sans-serif;">
+                <h3 style="color: #6366F1; margin-bottom: 15px;">🎯 زیتو - اشتراک‌گذاری تصاویر</h3>
+                <p style="margin-bottom: 10px;">
+                    تصاویرتان را رها کنید و با دنیا به اشتراک بگذارید.
+                </p>
+                <button style="background: linear-gradient(135deg, #6366F1, #EC4899); color: white; padding: 10px 20px; border: none; border-radius: 8px; font-family: inherit; font-weight: 500;">
+                    شروع رایگان
+                </button>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 5px;">
+            <strong style="color: #065f46;">✅ موفق!</strong>
+            <p style="color: #065f46; margin-top: 5px;">
+                اگر متن‌های فارسی بالا به درستی و با فونت مناسب نمایش داده می‌شوند، یعنی فونت‌های محلی با موفقیت بارگذاری شده‌اند.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // بررسی بارگذاری فونت‌ها
+        document.fonts.ready.then(() => {
+            console.log('✅ تمام فونت‌ها بارگذاری شدند');
+            
+            // بررسی دسترسی به فونت Vazirmatn
+            const vazirmatnAvailable = document.fonts.check('1em Vazirmatn');
+            console.log('Vazirmatn فونت در دسترس است:', vazirmatnAvailable);
+            
+            // نمایش اطلاعات فونت‌های بارگذاری شده
+            const loadedFonts = [...document.fonts].map(font => font.family);
+            console.log('فونت‌های بارگذاری شده:', loadedFonts);
+        });
+    </script>
+</body>
+</html>

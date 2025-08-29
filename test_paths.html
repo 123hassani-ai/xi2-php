@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست مسیرهای بروزرسانی شده</title>
+    
+    <!-- فونت‌ها و CSS با مسیر مطلق -->
+    <link rel="stylesheet" href="/xi2.ir/src/assets/css/fonts.css">
+    <link rel="stylesheet" href="/xi2.ir/src/assets/css/main.css">
+    <link rel="stylesheet" href="/xi2.ir/src/assets/css/components.css">
+    
+    <style>
+        body {
+            padding: 20px;
+            background: linear-gradient(135deg, #6366F1 0%, #EC4899 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+        .test-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+        .error { background: #fee2e2; color: #7f1d1d; border-left: 4px solid #ef4444; }
+        .loading { background: #dbeafe; color: #1e3a8a; border-left: 4px solid #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <h1>🧪 تست مسیرهای بروزرسانی شده</h1>
+        <p>این صفحه برای تست کارکرد مسیرهای مطلق بروزرسانی شده ایجاد شده است.</p>
+        
+        <div id="status-container">
+            <div class="loading">
+                🔄 در حال بررسی بارگذاری منابع...
+            </div>
+        </div>
+
+        <h2>وضعیت فونت‌ها:</h2>
+        <div id="font-status"></div>
+
+        <h2>نمونه متن با فونت محلی:</h2>
+        <div style="font-family: 'Vazirmatn', Arial, sans-serif; font-size: 18px; line-height: 1.6;">
+            <p>🎯 <strong>زیتو (Xi2)</strong> - پلتفرم اشتراک‌گذاری تصاویر</p>
+            <p>اگر این متن با فونت <strong>Vazirmatn</strong> نمایش داده می‌شود، پس فونت‌های محلی کار می‌کنند!</p>
+            <p style="font-weight: 300;">متن نازک</p>
+            <p style="font-weight: 400;">متن عادی</p>
+            <p style="font-weight: 700;">متن پررنگ</p>
+        </div>
+
+        <div style="margin-top: 30px; padding: 15px; background: #f3f4f6; border-radius: 8px;">
+            <h3>اطلاعات فنی:</h3>
+            <p><strong>URL فعلی:</strong> <code id="current-url"></code></p>
+            <p><strong>مسیر CSS:</strong> <code>/xi2.ir/src/assets/css/</code></p>
+            <p><strong>مسیر JS:</strong> <code>/xi2.ir/src/assets/js/</code></p>
+            <p><strong>مسیر فونت‌ها:</strong> <code>/xi2.ir/src/assets/fonts/</code></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('current-url').textContent = window.location.href;
+        
+        // بررسی بارگذاری فونت‌ها
+        document.fonts.ready.then(() => {
+            const fontStatus = document.getElementById('font-status');
+            const statusContainer = document.getElementById('status-container');
+            
+            const vazirmatnLoaded = document.fonts.check('1em Vazirmatn');
+            
+            if (vazirmatnLoaded) {
+                fontStatus.innerHTML = '<div class="success">✅ فونت Vazirmatn با موفقیت بارگذاری شد</div>';
+                statusContainer.innerHTML = '<div class="success">🎉 همه منابع با موفقیت بارگذاری شدند!</div>';
+            } else {
+                fontStatus.innerHTML = '<div class="error">❌ فونت Vazirmatn بارگذاری نشد</div>';
+                statusContainer.innerHTML = '<div class="error">⚠️ مشکل در بارگذاری برخی منابع</div>';
+            }
+            
+            console.log('🎯 وضعیت فونت‌ها:');
+            console.log('Vazirmatn:', vazirmatnLoaded);
+            console.log('فونت‌های موجود:', [...document.fonts].map(f => f.family));
+        });
+
+        // بررسی وضعیت شبکه
+        window.addEventListener('load', () => {
+            const resources = performance.getEntriesByType('resource');
+            const cssResources = resources.filter(r => r.name.includes('.css'));
+            const jsResources = resources.filter(r => r.name.includes('.js'));
+            
+            console.log('📊 منابع CSS بارگذاری شده:', cssResources.length);
+            console.log('📊 منابع JS بارگذاری شده:', jsResources.length);
+            
+            cssResources.forEach(resource => {
+                console.log('CSS:', resource.name, resource.responseEnd > 0 ? '✅' : '❌');
+            });
+        });
+    </script>
+</body>
+</html>
