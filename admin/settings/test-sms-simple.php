@@ -1,9 +1,10 @@
 <?php
 /**
- * زیتو (Xi2) - تست ارسال پیامک (ساده شده)
+ * زیتو (Xi2) - تست ارسال پیامک با پشتیبانی اعداد فارسی
  */
 require_once '../includes/auth-check.php';
 require_once '../../src/database/config.php';
+require_once '../../src/includes/persian-utils.php';
 require_once '../includes/path-config.php';
 
 $page_title = 'تست ارسال پیامک';
@@ -26,21 +27,37 @@ try {
     
     // پردازش فرم تست
     if ($_POST && isset($_POST['send_test']) && $sms_settings) {
-        $test_phone = trim($_POST['test_phone'] ?? '');
-        $test_message = trim($_POST['test_message'] ?? '');
+        // استفاده از PersianUtils برای پاک‌سازی و تبدیل
+        $test_phone_raw = trim($_POST['test_phone'] ?? '');
+        $test_message = PersianUtils::sanitizeInput($_POST['test_message'] ?? '');
         
-        // اعتبارسنجی ساده
-        if (empty($test_phone) || !preg_match('/^09\d{9}$/', $test_phone)) {
-            $message = 'شماره موبایل صحیح نیست (مثال: 09120540123)';
+        // تبدیل شماره موبایل با PersianUtils
+        $test_phone = PersianUtils::validateMobile($test_phone_raw);
+        
+        if (!$test_phone) {
+            $message = 'شماره موبایل صحیح نیست. فرمت مجاز: 09123456789';
             $message_type = 'danger';
+            
+            // لاگ تبدیل ناموفق
+            PersianUtils::logConversion('admin_sms_test_mobile_failed', $test_phone_raw, 'false', [
+                'admin_user' => get_admin_username()
+            ]);
+            
         } elseif (empty($test_message)) {
             $message = 'متن پیامک الزامی است';
             $message_type = 'danger';
         } else {
-            // ارسال مستقیم با cURL بدون encode کردن پسورد
+            // لاگ تبدیل موفق
+            if ($test_phone_raw !== $test_phone) {
+                PersianUtils::logConversion('admin_sms_test_mobile_converted', $test_phone_raw, $test_phone, [
+                    'admin_user' => get_admin_username()
+                ]);
+            }
+            
+            // ارسال مستقیم با cURL
             $url = 'https://0098sms.com/sendsmslink.aspx?' . 
                    'FROM=' . urlencode($sms_settings['sender_number']) . 
-                   '&TO=' . urlencode($test_phone) . 
+                   '&TO=' . urlencode($test_phone) . // شماره تبدیل شده
                    '&TEXT=' . urlencode($test_message) . 
                    '&USERNAME=' . urlencode($sms_settings['api_username']) . 
                    '&PASSWORD=' . $sms_settings['api_password'] . // خام بدون encode

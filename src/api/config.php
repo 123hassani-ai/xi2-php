@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Load database configuration
 require_once __DIR__ . '/../database/config.php';
 
+// Load Persian utilities
+require_once __DIR__ . '/../includes/persian-utils.php';
+
 /**
  * کلاس مدیریت API
  */
@@ -149,27 +152,11 @@ class ApiManager
     }
     
     /**
-     * اعتبارسنجی شماره موبایل
+     * اعتبارسنجی شماره موبایل با پشتیبانی اعداد فارسی
      */
     public static function validateMobile($mobile)
     {
-        // حذف فاصله و کاراکترهای اضافی
-        $mobile = preg_replace('/\s+/', '', $mobile);
-        
-        // بررسی فرمت ایرانی
-        $pattern = '/^(\+98|0098|98|0)?9[0-9]{9}$/';
-        
-        if (!preg_match($pattern, $mobile)) {
-            return false;
-        }
-        
-        // نرمال‌سازی به فرمت 09xxxxxxxxx
-        $mobile = preg_replace('/^(\+98|0098|98)/', '', $mobile);
-        if (strlen($mobile) === 10 && substr($mobile, 0, 1) === '9') {
-            $mobile = '0' . $mobile;
-        }
-        
-        return $mobile;
+        return PersianUtils::validateMobile($mobile);
     }
     
     /**

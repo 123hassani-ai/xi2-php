@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>تست خطای Path Resolver</title>
+</head>
+<body>
+    <h1>تست ساده</h1>
+    <p id="result">در حال بررسی...</p>
+    
+    <script src="/xi2.ir/src/assets/js/path-resolver.js"></script>
+    <script src="debug-path-resolver.js"></script>
+    
+    <script>
+        setTimeout(() => {
+            const result = document.getElementById('result');
+            result.innerHTML = `
+                <strong>نتایج:</strong><br>
+                XI_BASE_URL: ${window.XI_BASE_URL || 'تعریف نشده'}<br>
+                Xi2PathResolver: ${window.Xi2PathResolver || 'تعریف نشده'}<br>
+                CSS Count: ${document.querySelectorAll('link[rel="stylesheet"]').length}<br>
+                JS Count: ${document.querySelectorAll('script[src]').length}
+            `;
+        }, 2000);
+    </script>
+</body>
+</html>

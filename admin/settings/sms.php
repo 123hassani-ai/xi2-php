@@ -4,6 +4,7 @@
  */
 require_once '../includes/auth-check.php';
 require_once '../../src/database/config.php';
+require_once '../../src/includes/persian-utils.php';
 require_once '../includes/path-config.php';
 
 $page_title = 'تنظیمات پیامک';
@@ -54,13 +55,26 @@ try {
         $test_number = trim($_POST['test_number'] ?? '');
         $is_active = isset($_POST['is_active']) ? 1 : 0;
         
-        // اعتبارسنجی
+        // اعتبارسنجی با PersianUtils
         $errors = [];
         if (empty($api_username)) $errors[] = 'نام کاربری API الزامی است';
         if (empty($api_password)) $errors[] = 'رمز عبور API الزامی است';
         if (empty($sender_number)) $errors[] = 'شماره ارسال‌کننده الزامی است';
-        if (!empty($test_number) && !preg_match('/^09\d{9}$/', $test_number)) {
-            $errors[] = 'شماره تست باید فرمت صحیح موبایل ایران داشته باشد';
+        
+        // اعتبارسنجی شماره تست با PersianUtils
+        if (!empty($test_number)) {
+            $validated_test_number = PersianUtils::validateMobile($test_number);
+            if (!$validated_test_number) {
+                $errors[] = 'شماره تست باید فرمت صحیح موبایل ایران داشته باشد (مثال: 09123456789)';
+            } else {
+                // لاگ تبدیل در صورت تغییر
+                if ($test_number !== $validated_test_number) {
+                    PersianUtils::logConversion('admin_sms_settings_test_number', $test_number, $validated_test_number, [
+                        'admin_user' => get_admin_username()
+                    ]);
+                }
+                $test_number = $validated_test_number;
+            }
         }
         
         if (empty($errors)) {
