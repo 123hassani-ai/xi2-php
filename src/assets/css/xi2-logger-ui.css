@@ -1,0 +1,452 @@
+/**
+ * Xi2 Smart Logger - UI Components Styles
+ * استایل‌های مخصوص کامپوننت‌های رابط کاربری سیستم لاگ‌گیری
+ */
+
+/* ==========================================================================
+   Help Tooltip - راهنمای هوشمند
+   ========================================================================== */
+
+.xi2-help-tooltip {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    max-width: 320px;
+    min-width: 250px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    direction: rtl;
+    text-align: right;
+}
+
+.xi2-help-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #4CAF50;
+}
+
+.xi2-help-tooltip .help-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.xi2-help-tooltip .help-content p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.xi2-help-tooltip .help-content button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    align-self: flex-end;
+}
+
+.xi2-help-tooltip .help-content button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Intelligent Loading - لودینگ هوشمند
+   ========================================================================== */
+
+.xi2-intelligent-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-out;
+    backdrop-filter: blur(3px);
+}
+
+.xi2-intelligent-loading .loading-content {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.xi2-intelligent-loading .loading-spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.xi2-intelligent-loading .loading-content p {
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    direction: rtl;
+}
+
+/* ==========================================================================
+   Field Highlighting - برجسته‌سازی فیلدها
+   ========================================================================== */
+
+.xi2-highlighted-field {
+    position: relative;
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.xi2-highlighted-field::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    background-size: 300% 300%;
+    border-radius: 8px;
+    z-index: -1;
+    animation: gradientShift 3s ease infinite;
+}
+
+.xi2-highlighted-field input,
+.xi2-highlighted-field textarea,
+.xi2-highlighted-field select {
+    background: white !important;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+}
+
+/* ==========================================================================
+   Error Messages - پیغام‌های خطا
+   ========================================================================== */
+
+.xi2-error-message {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    animation: slideInDown 0.3s ease-out;
+    direction: rtl;
+    text-align: right;
+}
+
+.xi2-error-message::before {
+    content: '⚠️ ';
+    margin-left: 8px;
+}
+
+/* ==========================================================================
+   Success Messages - پیغام‌های موفقیت
+   ========================================================================== */
+
+.xi2-success-message {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    animation: slideInDown 0.3s ease-out;
+    direction: rtl;
+    text-align: right;
+}
+
+.xi2-success-message::before {
+    content: '✅ ';
+    margin-left: 8px;
+}
+
+/* ==========================================================================
+   Performance Indicator - نشانگر عملکرد
+   ========================================================================== */
+
+.xi2-performance-indicator {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 9998;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.xi2-performance-indicator.good {
+    color: #4CAF50;
+    border-left: 4px solid #4CAF50;
+}
+
+.xi2-performance-indicator.medium {
+    color: #FF9800;
+    border-left: 4px solid #FF9800;
+}
+
+.xi2-performance-indicator.poor {
+    color: #F44336;
+    border-left: 4px solid #F44336;
+}
+
+/* ==========================================================================
+   Debug Panel - پنل دیباگ
+   ========================================================================== */
+
+.xi2-debug-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 380px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    color: #00ff00;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+    z-index: 10001;
+    backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.xi2-debug-panel.visible {
+    right: 0;
+}
+
+.xi2-debug-panel .debug-header {
+    padding: 15px;
+    background: rgba(76, 175, 80, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+}
+
+.xi2-debug-panel .debug-content {
+    padding: 15px;
+    line-height: 1.4;
+}
+
+.xi2-debug-panel .debug-entry {
+    margin-bottom: 10px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    border-left: 3px solid #00ff00;
+}
+
+.xi2-debug-panel .debug-entry.error {
+    border-left-color: #ff6b6b;
+    color: #ff6b6b;
+}
+
+.xi2-debug-panel .debug-entry.warning {
+    border-left-color: #ffa726;
+    color: #ffa726;
+}
+
+/* ==========================================================================
+   Animations - انیمیشن‌ها
+   ========================================================================== */
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.8), 0 0 30px rgba(76, 175, 80, 0.6);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ==========================================================================
+   Responsive Design - طراحی واکنش‌گرا
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .xi2-help-tooltip {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .xi2-intelligent-loading .loading-content {
+        margin: 0 20px;
+        padding: 30px 20px;
+    }
+    
+    .xi2-debug-panel {
+        width: 100vw;
+        right: -100vw;
+    }
+    
+    .xi2-performance-indicator {
+        top: 10px;
+        left: 10px;
+        font-size: 11px;
+    }
+}
+
+/* ==========================================================================
+   RTL Support - پشتیبانی از راست به چپ
+   ========================================================================== */
+
+[dir="rtl"] .xi2-help-tooltip {
+    left: 20px;
+    right: auto;
+}
+
+[dir="rtl"] .xi2-help-tooltip::before {
+    right: auto;
+    left: 20px;
+}
+
+[dir="rtl"] .xi2-performance-indicator {
+    left: auto;
+    right: 20px;
+    border-left: none;
+    border-right: 4px solid;
+}
+
+[dir="rtl"] .xi2-debug-panel {
+    right: auto;
+    left: -400px;
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[dir="rtl"] .xi2-debug-panel.visible {
+    left: 0;
+}
+
+/* ==========================================================================
+   Dark Theme Support - پشتیبانی از تم تاریک
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+    .xi2-intelligent-loading {
+        background: rgba(0, 0, 0, 0.95);
+    }
+    
+    .xi2-intelligent-loading .loading-content {
+        background: #1a1a1a;
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .xi2-performance-indicator {
+        background: rgba(0, 0, 0, 0.9);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .xi2-highlighted-field input,
+    .xi2-highlighted-field textarea,
+    .xi2-highlighted-field select {
+        background: #1a1a1a !important;
+        color: #ffffff;
+    }
+}
+
+/* ==========================================================================
+   Print Styles - استایل‌های چاپ
+   ========================================================================== */
+
+@media print {
+    .xi2-help-tooltip,
+    .xi2-intelligent-loading,
+    .xi2-performance-indicator,
+    .xi2-debug-panel {
+        display: none !important;
+    }
+}

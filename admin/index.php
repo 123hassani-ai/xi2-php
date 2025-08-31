@@ -15,18 +15,45 @@ try {
     // آمار کلی
     $stats = [
         'total_users' => 0,
+        'guest_uploads' => 0,
+        'plus_users' => 0,
         'total_uploads' => 0,
         'sms_sent_today' => 0,
         'sms_sent_total' => 0
     ];
     
-    // تعداد کاربران
-    $stmt = $db->query("SELECT COUNT(*) as count FROM users");
-    $stats['total_users'] = $stmt->fetch()['count'] ?? 0;
+    // تعداد کاربران ثبت‌نام شده (پلاس)
+    try {
+        $stmt = $db->query("SELECT COUNT(*) as count FROM users WHERE user_type = 'plus'");
+        $stats['plus_users'] = $stmt->fetch()['count'] ?? 0;
+    } catch (Exception $e) {
+        error_log("Error getting plus users: " . $e->getMessage());
+    }
+    
+    // کل کاربران
+    try {
+        $stmt = $db->query("SELECT COUNT(*) as count FROM users");
+        $stats['total_users'] = $stmt->fetch()['count'] ?? 0;
+    } catch (Exception $e) {
+        error_log("Error getting total users: " . $e->getMessage());
+    }
+    
+    // آپلودهای میهمان‌ها
+    try {
+        $stmt = $db->query("SELECT COUNT(*) as count FROM guest_uploads");
+        $stats['guest_uploads'] = $stmt->fetch()['count'] ?? 0;
+    } catch (Exception $e) {
+        error_log("Error getting guest uploads: " . $e->getMessage());
+        $stats['guest_uploads'] = 0;
+    }
     
     // تعداد فایل‌های آپلود شده
-    $stmt = $db->query("SELECT COUNT(*) as count FROM uploads");
-    $stats['total_uploads'] = $stmt->fetch()['count'] ?? 0;
+    try {
+        $stmt = $db->query("SELECT COUNT(*) as count FROM uploads");
+        $stats['total_uploads'] = $stmt->fetch()['count'] ?? 0;
+    } catch (Exception $e) {
+        error_log("Error getting total uploads: " . $e->getMessage());
+    }
     
     // پیامک‌های امروز (اگر جدول وجود داشته باشد)
     try {
@@ -39,20 +66,44 @@ try {
         $stmt = $db->query("SELECT COUNT(*) as count FROM sms_logs");
         $stats['sms_sent_total'] = $stmt->fetch()['count'] ?? 0;
     } catch (Exception $e) {
-        // جدول sms_logs هنوز وجود ندارد
+        error_log("Error getting SMS stats: " . $e->getMessage());
+        $stats['sms_sent_today'] = 0;
+        $stats['sms_sent_total'] = 0;
     }
     
     // آخرین کاربران
-    $stmt = $db->query("SELECT id, mobile, created_at FROM users ORDER BY created_at DESC LIMIT 5");
-    $latest_users = $stmt->fetchAll();
+    try {
+        $stmt = $db->query("SELECT id, mobile, created_at FROM users ORDER BY created_at DESC LIMIT 5");
+        $latest_users = $stmt->fetchAll();
+    } catch (Exception $e) {
+        error_log("Error getting latest users: " . $e->getMessage());
+        $latest_users = [];
+    }
     
     // آخرین فایل‌های آپلود شده
-    $stmt = $db->query("SELECT id, file_name, user_id, created_at FROM uploads ORDER BY created_at DESC LIMIT 5");
-    $latest_uploads = $stmt->fetchAll();
+    try {
+        $stmt = $db->query("SELECT id, file_name, user_id, created_at FROM uploads ORDER BY created_at DESC LIMIT 5");
+        $latest_uploads = $stmt->fetchAll();
+    } catch (Exception $e) {
+        error_log("Error getting latest uploads: " . $e->getMessage());
+        $latest_uploads = [];
+    }
     
 } catch (Exception $e) {
     error_log('Xi2 Admin Dashboard Error: ' . $e->getMessage());
-    $error_message = 'خطا در دریافت اطلاعات داشبورد';
+    $error_message = 'خطا در دریافت اطلاعات داشبورد: ' . $e->getMessage();
+    
+    // مقادیر پیش‌فرض در صورت خطا
+    $stats = [
+        'total_users' => 0,
+        'guest_uploads' => 0,
+        'plus_users' => 0,
+        'total_uploads' => 0,
+        'sms_sent_today' => 0,
+        'sms_sent_total' => 0
+    ];
+    $latest_users = [];
+    $latest_uploads = [];
 }
 
 include 'includes/header.php';
@@ -61,10 +112,18 @@ include 'includes/header.php';
 <!-- Stats Cards -->
 <div class="stats-grid">
     <div class="stat-card">
-        <div class="stat-number"><?php echo number_format($stats['total_users']); ?></div>
+        <div class="stat-number"><?php echo number_format($stats['plus_users']); ?></div>
         <div class="stat-label">
-            <i class="fas fa-users" style="margin-left: 5px;"></i>
-            کل کاربران
+            <i class="fas fa-user-plus" style="margin-left: 5px;"></i>
+            کاربران پلاس
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number"><?php echo number_format($stats['guest_uploads']); ?></div>
+        <div class="stat-label">
+            <i class="fas fa-user-clock" style="margin-left: 5px;"></i>
+            آپلود میهمان
         </div>
     </div>
     
@@ -83,20 +142,16 @@ include 'includes/header.php';
             پیامک امروز
         </div>
     </div>
-    
-    <div class="stat-card">
-        <div class="stat-number"><?php echo number_format($stats['sms_sent_total']); ?></div>
-        <div class="stat-label">
-            <i class="fas fa-paper-plane" style="margin-left: 5px;"></i>
-            کل پیامک‌ها
-        </div>
-    </div>
 </div>
 
 <?php if (isset($error_message)): ?>
 <div class="alert alert-danger">
     <i class="fas fa-exclamation-triangle" style="margin-left: 8px;"></i>
     <?php echo htmlspecialchars($error_message); ?>
+    <br><br>
+    <a href="test-db.php" class="btn btn-sm btn-secondary">
+        🔧 تست اتصال دیتابیس
+    </a>
 </div>
 <?php endif; ?>
 

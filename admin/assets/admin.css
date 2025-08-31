@@ -162,6 +162,28 @@ body {
     padding: 20px 0;
 }
 
+.nav-section {
+    margin: 20px 0 10px 0;
+}
+
+.nav-section-title {
+    display: flex;
+    align-items: center;
+    padding: 10px 25px;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    margin-bottom: 5px;
+}
+
+.nav-section-title i {
+    margin-left: 8px;
+    font-size: 14px;
+}
+
 .nav-item {
     margin-bottom: 5px;
 }

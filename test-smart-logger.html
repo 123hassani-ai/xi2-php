@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xi2 Smart Logger - سیستم لاگ‌گیری هوشمند</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/xi2-logger-ui.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+        
+        .demo-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-section h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .demo-button.danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        .demo-button.warning {
+            background: linear-gradient(135deg, #ffa726, #ff9800);
+            box-shadow: 0 4px 12px rgba(255, 167, 38, 0.3);
+        }
+        
+        .demo-form {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+        }
+        
+        .demo-form input,
+        .demo-form textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .demo-form input:focus,
+        .demo-form textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .log-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 20px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin: 0 10px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🧠 Xi2 Smart Logger</h1>
+            <p>سیستم لاگ‌گیری هوشمند با قابلیت تحلیل real-time و رفع خودکار مشکلات</p>
+        </div>
+        
+        <!-- کنترل‌های اصلی -->
+        <div class="demo-section">
+            <h2>🎛️ کنترل‌های سیستم</h2>
+            <div class="demo-controls">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label>حالت دیباگ:</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="debugToggle">
+                        <span class="slider"></span>
+                    </div>
+                </div>
+                
+                <button class="demo-button" onclick="showCurrentAnalysis()">نمایش تحلیل فعلی</button>
+                <button class="demo-button" onclick="triggerAutoFix()">اجرای Auto-Fix</button>
+                <button class="demo-button warning" onclick="clearLogs()">پاک کردن لاگ‌ها</button>
+            </div>
+        </div>
+        
+        <!-- آمار لحظه‌ای -->
+        <div class="demo-section">
+            <h2>📊 آمار لحظه‌ای</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalEvents">0</div>
+                    <div class="stat-label">کل رویدادها</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="errorCount">0</div>
+                    <div class="stat-label">تعداد خطاها</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="performanceScore">100</div>
+                    <div class="stat-label">امتیاز عملکرد</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="frustrationLevel">0</div>
+                    <div class="stat-label">سطح ناامیدی کاربر</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- تست رویدادها -->
+        <div class="demo-section">
+            <h2>🧪 تست رویدادها</h2>
+            <div class="demo-controls">
+                <button class="demo-button" onclick="simulateClick()">شبیه‌سازی کلیک</button>
+                <button class="demo-button" onclick="simulateError()">ایجاد خطا</button>
+                <button class="demo-button" onclick="simulateFrustration()">شبیه‌سازی ناامیدی</button>
+                <button class="demo-button" onclick="simulateSlowLoading()">لودینگ کند</button>
+                <button class="demo-button danger" onclick="triggerCriticalError()">خطای بحرانی</button>
+                <button class="demo-button" onclick="testPerformance()">تست عملکرد</button>
+            </div>
+        </div>
+        
+        <!-- فرم تست -->
+        <div class="demo-section">
+            <h2>📝 فرم تست (تحلیل تعاملات)</h2>
+            <div class="demo-form">
+                <input type="text" placeholder="نام کاربری" id="testUsername">
+                <input type="email" placeholder="ایمیل" id="testEmail">
+                <input type="password" placeholder="رمز عبور" id="testPassword">
+                <textarea placeholder="نظرات شما" rows="4" id="testComments"></textarea>
+                <button class="demo-button" onclick="submitTestForm()">ارسال فرم</button>
+            </div>
+        </div>
+        
+        <!-- خروجی لاگ‌ها -->
+        <div class="demo-section">
+            <h2>📋 خروجی لاگ‌ها (Real-time)</h2>
+            <div class="log-output" id="logOutput">آماده برای نمایش لاگ‌ها...</div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/xi2-logger-helpers.js"></script>
+    <script src="../assets/js/xi2-smart-logger.js"></script>
+    <script src="../assets/js/xi2-logger-init.js"></script>
+    
+    <script>
+        // متغیرهای سراسری
+        let eventCounter = 0;
+        let errorCounter = 0;
+        let frustrationCounter = 0;
+        
+        // صبر برای آماده شدن logger
+        xi2LoggerPromise.then(logger => {
+            console.log('Logger آماده شد!', logger);
+            updateUI();
+        });
+        
+        // گوش دادن به ready event
+        document.addEventListener('xi2LoggerReady', (event) => {
+            console.log('Xi2Logger Ready Event:', event.detail);
+            setupEventListeners();
+            startRealtimeUpdates();
+        });
+        
+        // تنظیم event listeners
+        function setupEventListeners() {
+            // Debug toggle
+            document.getElementById('debugToggle').addEventListener('change', (e) => {
+                if (window.xi2Logger) {
+                    window.xi2Logger.setDebugMode(e.target.checked);
+                    logMessage(`Debug mode ${e.target.checked ? 'فعال' : 'غیرفعال'} شد`);
+                }
+            });
+            
+            // Form inputs monitoring
+            ['testUsername', 'testEmail', 'testPassword', 'testComments'].forEach(id => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    xi2Track('form_interaction', {
+                        field: id,
+                        value_length: e.target.value.length,
+                        timestamp: Date.now()
+                    });
+                });
+            });
+        }
+        
+        // شبیه‌سازی کلیک
+        function simulateClick() {
+            eventCounter++;
+            xi2Track('simulated_click', {
+                button_id: 'simulate_click',
+                timestamp: Date.now()
+            });
+            logMessage(`✅ کلیک شبیه‌سازی شد (${eventCounter})`);
+            updateStats();
+        }
+        
+        // ایجاد خطا
+        function simulateError() {
+            errorCounter++;
+            const error = new Error('این یک خطای شبیه‌سازی شده است');
+            xi2TrackError(error, {
+                source: 'simulation',
+                timestamp: Date.now()
+            });
+            logMessage(`❌ خطا ایجاد شد: ${error.message}`);
+            updateStats();
+        }
+        
+        // شبیه‌سازی ناامیدی
+        function simulateFrustration() {
+            frustrationCounter++;
+            
+            // چندین کلیک سریع
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    xi2Track('rapid_click', {
+                        click_sequence: i + 1,
+                        timestamp: Date.now()
+                    });
+                }, i * 100);
+            }
+            
+            logMessage(`😤 ناامیدی کاربر شبیه‌سازی شد (${frustrationCounter})`);
+            updateStats();
+        }
+        
+        // شبیه‌سازی لودینگ کند
+        function simulateSlowLoading() {
+            xi2Track('slow_operation_start', {
+                operation_type: 'simulation',
+                timestamp: Date.now()
+            });
+            
+            // نمایش loading
+            if (window.xi2Logger) {
+                window.xi2Logger.showIntelligentLoading({
+                    message: 'در حال شبیه‌سازی عملیات کند...',
+                    duration: 5000
+                });
+            }
+            
+            setTimeout(() => {
+                xi2Track('slow_operation_end', {
+                    operation_type: 'simulation',
+                    duration: 5000,
+                    timestamp: Date.now()
+                });
+                logMessage('⏳ عملیات کند شبیه‌سازی شد');
+            }, 5000);
+        }
+        
+        // خطای بحرانی
+        function triggerCriticalError() {
+            errorCounter += 3;
+            const criticalError = new Error('خطای بحرانی: سیستم در معرض خطر!');
+            xi2TrackError(criticalError, {
+                severity: 'critical',
+                source: 'simulation',
+                timestamp: Date.now()
+            });
+            logMessage(`💥 خطای بحرانی: ${criticalError.message}`);
+            updateStats();
+        }
+        
+        // تست عملکرد
+        async function testPerformance() {
+            const startTime = performance.now();
+            
+            // شبیه‌سازی عملیات سنگین
+            for (let i = 0; i < 100000; i++) {
+                Math.random() * Math.random();
+            }
+            
+            const endTime = performance.now();
+            const duration = endTime - startTime;
+            
+            xi2Track('performance_test', {
+                operation: 'heavy_calculation',
+                duration: duration,
+                timestamp: Date.now()
+            });
+            
+            logMessage(`⚡ تست عملکرد: ${duration.toFixed(2)} میلی‌ثانیه`);
+        }
+        
+        // نمایش تحلیل فعلی
+        async function showCurrentAnalysis() {
+            if (window.xi2Logger) {
+                const analysis = await window.xi2Logger.getCurrentAnalysis();
+                if (analysis) {
+                    logMessage(`📊 تحلیل فعلی: ${JSON.stringify(analysis, null, 2)}`);
+                } else {
+                    logMessage('❌ خطا در دریافت تحلیل');
+                }
+            }
+        }
+        
+        // اجرای Auto-Fix
+        async function triggerAutoFix() {
+            try {
+                const response = await fetch('/xi2.ir/src/api/logging/trigger-fix.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fix_type: 'performance_optimization',
+                        context: 'user_manual_trigger'
+                    })
+                });
+                
+                const result = await response.json();
+                logMessage(`🔧 Auto-Fix اجرا شد: ${JSON.stringify(result, null, 2)}`);
+            } catch (error) {
+                logMessage(`❌ خطا در Auto-Fix: ${error.message}`);
+            }
+        }
+        
+        // ارسال فرم تست
+        function submitTestForm() {
+            const formData = {
+                username: document.getElementById('testUsername').value,
+                email: document.getElementById('testEmail').value,
+                password: document.getElementById('testPassword').value ? '[HIDDEN]' : '',
+                comments: document.getElementById('testComments').value
+            };
+            
+            xi2Track('test_form_submit', {
+                form_data: formData,
+                completion_time: Date.now(),
+                timestamp: Date.now()
+            });
+            
+            logMessage(`📝 فرم ارسال شد: ${JSON.stringify(formData, null, 2)}`);
+        }
+        
+        // پاک کردن لاگ‌ها
+        function clearLogs() {
+            document.getElementById('logOutput').textContent = 'لاگ‌ها پاک شدند...';
+        }
+        
+        // بروزرسانی UI
+        function updateUI() {
+            updateStats();
+        }
+        
+        // بروزرسانی آمار
+        function updateStats() {
+            document.getElementById('totalEvents').textContent = eventCounter;
+            document.getElementById('errorCount').textContent = errorCounter;
+            document.getElementById('frustrationLevel').textContent = frustrationCounter;
+            
+            // محاسبه امتیاز عملکرد
+            let score = 100 - (errorCounter * 5) - (frustrationCounter * 10);
+            score = Math.max(0, score);
+            document.getElementById('performanceScore').textContent = score;
+        }
+        
+        // نمایش پیام در لاگ
+        function logMessage(message) {
+            const logOutput = document.getElementById('logOutput');
+            const timestamp = new Date().toLocaleTimeString('fa-IR');
+            const logEntry = `[${timestamp}] ${message}\n`;
+            
+            logOutput.textContent += logEntry;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        // بروزرسانی‌های real-time
+        function startRealtimeUpdates() {
+            setInterval(() => {
+                // شبیه‌سازی فعالیت پس‌زمینه
+                if (Math.random() > 0.8) {
+                    eventCounter++;
+                    xi2Track('background_activity', {
+                        activity_type: 'automatic',
+                        timestamp: Date.now()
+                    });
+                    updateStats();
+                }
+            }, 5000);
+        }
+        
+        // Override console.log برای نمایش در UI
+        const originalConsoleLog = console.log;
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            if (args[0] && typeof args[0] === 'string' && args[0].includes('Xi2')) {
+                logMessage(args.join(' '));
+            }
+        };
+        
+        // اضافه کردن event listeners به صفحه
+        document.addEventListener('DOMContentLoaded', () => {
+            logMessage('🚀 صفحه تست Xi2SmartLogger آماده شد');
+        });
+        
+        // تست خودکار در startup
+        setTimeout(() => {
+            logMessage('🔄 شروع تست‌های خودکار...');
+            simulateClick();
+            
+            setTimeout(() => {
+                simulateError();
+            }, 2000);
+            
+            setTimeout(() => {
+                testPerformance();
+            }, 4000);
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,4 +1,6 @@
 ---
 applyTo: '**'
 ---
-Provide project context and coding guidelines that AI should follow when generating code, answering questions, or reviewing changes.
+لطفا همیشه در چت به زبان فارسی با من صحبت کنید.
+لطفا همیشه به پوشه docs/smart-prompts مراجعه کنید
+و از پرامپت‌های موجود در آن برای بهبود کیفیت پاسخ‌ها استفاده کنید.

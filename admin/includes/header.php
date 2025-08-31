@@ -44,6 +44,43 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     </a>
                 </li>
                 
+                <!-- منوی مدیریت کاربران -->
+                <li class="nav-section">
+                    <div class="nav-section-title">
+                        <i class="fas fa-users"></i>
+                        مدیریت کاربران
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="<?php echo admin_url('settings/guest-users.php'); ?>" class="nav-link <?php echo $current_page === 'guest-users' ? 'active' : ''; ?>">
+                        <i class="fas fa-user-clock"></i>
+                        کاربران میهمان
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="<?php echo admin_url('settings/plus-users.php'); ?>" class="nav-link <?php echo $current_page === 'plus-users' ? 'active' : ''; ?>">
+                        <i class="fas fa-user-plus"></i>
+                        کاربران پلاس
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="<?php echo admin_url('settings/premium-users.php'); ?>" class="nav-link <?php echo $current_page === 'premium-users' ? 'active' : ''; ?>">
+                        <i class="fas fa-crown"></i>
+                        کاربران پریمیوم
+                    </a>
+                </li>
+                
+                <!-- منوی تنظیمات پیامک -->
+                <li class="nav-section" style="margin-top: 20px;">
+                    <div class="nav-section-title">
+                        <i class="fas fa-cog"></i>
+                        تنظیمات سیستم
+                    </div>
+                </li>
+                
                 <li class="nav-item">
                     <a href="<?php echo admin_url('settings/sms.php'); ?>" class="nav-link <?php echo $current_page === 'sms' ? 'active' : ''; ?>">
                         <i class="fas fa-sms"></i>

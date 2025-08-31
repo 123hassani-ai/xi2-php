@@ -8,12 +8,22 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// تعیین مسیر ریشه ادمین
+$admin_root = dirname(dirname(__FILE__));
+$login_path = $admin_root . '/login.php';
+
 // بررسی ورود ادمین
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     // Log unauthorized access attempt
     error_log('Xi2 Admin: Unauthorized access attempt - IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . ' - URL: ' . ($_SERVER['REQUEST_URI'] ?? 'unknown'));
     
-    header('Location: login.php');
+    // تعیین مسیر صحیح برای redirect
+    $relative_path = '../login.php';
+    if (basename(dirname($_SERVER['PHP_SELF'])) === 'settings') {
+        $relative_path = '../login.php';
+    }
+    
+    header('Location: ' . $relative_path);
     exit;
 }
 
@@ -24,7 +34,13 @@ if (isset($_SESSION['admin_login_time']) && (time() - $_SESSION['admin_login_tim
     
     error_log('Xi2 Admin: Session timeout - User: ' . ($_SESSION['admin_username'] ?? 'unknown'));
     
-    header('Location: login.php?timeout=1');
+    // تعیین مسیر صحیح برای timeout redirect
+    $relative_path = '../login.php?timeout=1';
+    if (basename(dirname($_SERVER['PHP_SELF'])) === 'settings') {
+        $relative_path = '../login.php?timeout=1';
+    }
+    
+    header('Location: ' . $relative_path);
     exit;
 }
 

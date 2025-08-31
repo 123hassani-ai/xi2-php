@@ -29,7 +29,7 @@ class Database {
     
     private function connect() {
         try {
-            $dsn = "mysql:host={$this->host};port=3307;dbname={$this->database};charset={$this->charset}";
+            $dsn = "mysql:host={$this->host};dbname={$this->database};charset={$this->charset}";
             
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
