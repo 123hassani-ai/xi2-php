@@ -326,8 +326,25 @@ class Xi2SessionManager
     
     private function getSessionIdFromHeader(): ?string
     {
-        $headers = getallheaders();
-        return $headers['X-Xi2-Session-Id'] ?? null;
+        // بررسی CLI environment
+        if (php_sapi_name() === 'cli') {
+            return null;
+        }
+        
+        // استفاده از getallheaders اگر موجود باشد
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            return $headers['X-Xi2-Session-Id'] ?? null;
+        }
+        
+        // روش جایگزین برای سرورهای nginx
+        foreach ($_SERVER as $name => $value) {
+            if (strtolower($name) === 'http_x_xi2_session_id') {
+                return $value;
+            }
+        }
+        
+        return null;
     }
     
     private function setSessionCookie(string $sessionId): void

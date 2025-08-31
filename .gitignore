@@ -48,6 +48,22 @@ storage/cache/*
 storage/logs/*
 !storage/logs/.gitkeep
 
+# جلوگیری از اضافه شدن فایل‌های تستی و بک‌آپ در آینده
+test-*.php
+test-*.html
+debug-*.php
+*-backup.*
+*-old.*
+*.backup
+temp_*
+cookies.txt
+
+# فایل‌های اضافی
+phpMyAdmin-config-fix.php
+auto-path.html
+font_test_simple.html
+modal-fix.css
+
 # فایل‌های کانفیگ محلی
 config/local.php
 .env

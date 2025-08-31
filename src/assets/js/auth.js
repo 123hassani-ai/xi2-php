@@ -5,12 +5,19 @@
 
 class Xi2Auth {
     constructor() {
-        this.API_BASE = '/xi2.ir/src/api/auth/';
+        // تنظیم مسیر API با absolute path
+        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+            this.API_BASE = 'http://localhost/xi2.ir/src/api/auth/';
+        } else {
+            this.API_BASE = '/src/api/auth/';
+        }
         this.currentMobile = null;
         this.otpTimer = null;
         this.popperInstance = null; // برای Popper.js
         this.userMenuTrigger = null;
         this.userMenuDropdown = null;
+        
+        console.log('Xi2Auth initialized with API_BASE:', this.API_BASE);
         this.init();
     }
 
@@ -215,6 +222,12 @@ class Xi2Auth {
                 })
             });
 
+            // چک کردن response status
+            if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const result = await response.json();
 
             if (result.success) {
@@ -256,17 +269,22 @@ class Xi2Auth {
                 return { success: false, message: 'اطلاعات وارد شده معتبر نیست' };
             }
 
-            const response = await fetch(this.API_BASE + 'register.php', {
+            const response = await fetch(this.API_BASE + 'register-simple.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: fullName,  // تغییر از fullName به name
+                    name: fullName,
                     mobile: mobile,
                     password: password
                 })
             });
+
+            // چک کردن response status
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
             const result = await response.json();
 
@@ -277,7 +295,7 @@ class Xi2Auth {
                     success: true, 
                     message: result.message,
                     mobile: mobile,
-                    otpExpires: result.data.otpExpires
+                    otpExpires: result.otpExpires || null
                 };
             } else {
                 return { success: false, message: result.message };

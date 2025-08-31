@@ -81,6 +81,13 @@ class Xi2App {
             }
         });
 
+        // بستن مودال با کلیک روی هر جای پس‌زمینه (fallback)
+        modal?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                this.hideModal();
+            }
+        });
+
         // جابجایی بین فرم‌ها
         showRegister?.addEventListener('click', (e) => {
             e.preventDefault();
@@ -97,6 +104,12 @@ class Xi2App {
             if (e.key === 'Escape' && modal?.classList.contains('active')) {
                 this.hideModal();
             }
+        });
+
+        // جلوگیری از بسته شدن modal هنگام کلیک روی محتوا
+        const modalContent = modal?.querySelector('.modal-content');
+        modalContent?.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     }
 
@@ -230,9 +243,15 @@ class Xi2App {
     }
 
     async initPWA() {
+        // Service Worker را unregister کن برای debugging
         if ('serviceWorker' in navigator) {
-            this.registerServiceWorker();
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let registration of registrations) {
+                await registration.unregister();
+                console.log('Service Worker unregistered');
+            }
         }
+        console.log('PWA and Service Worker completely disabled for debugging');
     }
 
     async registerServiceWorker() {

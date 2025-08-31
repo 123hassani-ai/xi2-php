@@ -144,6 +144,49 @@ include 'includes/header.php';
     </div>
 </div>
 
+<!-- Quick Actions -->
+<div class="card" style="margin: 30px 0;">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-bolt" style="margin-left: 8px;"></i>
+            عملیات سریع
+        </h3>
+    </div>
+    <div class="card-body">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <a href="settings/sms.php" class="btn btn-primary" style="text-decoration: none;">
+                <i class="fas fa-cog" style="margin-left: 8px;"></i>
+                تنظیمات SMS
+            </a>
+            
+            <a href="settings/test-sms-simple.php" class="btn btn-success" style="text-decoration: none;">
+                <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>
+                تست ارسال پیامک
+            </a>
+            
+            <a href="logs/sms-logs.php" class="btn btn-info" style="text-decoration: none;">
+                <i class="fas fa-list" style="margin-left: 8px;"></i>
+                لاگ‌های SMS
+            </a>
+            
+            <a href="settings/guest-users.php" class="btn btn-secondary" style="text-decoration: none;">
+                <i class="fas fa-users" style="margin-left: 8px;"></i>
+                کاربران مهمان
+            </a>
+            
+            <a href="settings/plus-users.php" class="btn btn-warning" style="text-decoration: none;">
+                <i class="fas fa-user-plus" style="margin-left: 8px;"></i>
+                کاربران پلاس
+            </a>
+            
+            <a href="../test-complete-project.php" class="btn btn-outline-primary" style="text-decoration: none;" target="_blank">
+                <i class="fas fa-flask" style="margin-left: 8px;"></i>
+                تست کامل سیستم
+            </a>
+        </div>
+    </div>
+</div>
+
 <?php if (isset($error_message)): ?>
 <div class="alert alert-danger">
     <i class="fas fa-exclamation-triangle" style="margin-left: 8px;"></i>

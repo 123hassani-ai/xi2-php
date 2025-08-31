@@ -4,19 +4,18 @@
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 9999;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+  overflow: auto;
 }
 
 .modal.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block !important;
   animation: modalFadeIn 0.3s ease;
 }
 
@@ -27,13 +26,17 @@
 
 .modal-content {
   background: var(--bg-secondary);
-  margin: var(--spacing-md);
   padding: var(--spacing-xl);
   border-radius: var(--radius-xl);
-  width: 100%;
+  width: 90%;
   max-width: 400px;
+  min-width: 350px;
   box-shadow: var(--shadow-xl);
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
   animation: modalSlideIn 0.3s ease;
 }
 
@@ -431,11 +434,39 @@
   to { opacity: 1; }
 }
 
+/* حالت دسکتاپ */
+@media (min-width: 769px) {
+  .modal {
+    z-index: 9999 !important;
+  }
+  
+  .modal.active {
+    display: block !important;
+  }
+  
+  .modal-content {
+    width: 400px;
+    max-width: 400px;
+    min-width: 400px;
+    padding: 2rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+  }
+}
+
 /* حالت موبایل */
 @media (max-width: 768px) {
   .modal-content {
-    margin: var(--spacing-sm);
+    width: 90%;
+    min-width: 300px;
+    max-width: 350px;
     padding: var(--spacing-lg);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
   }
   
   .notification {

@@ -25,34 +25,47 @@ interface CopilotIdentity {
 
 ## 📂 **پروژه Context - درک کامل محیط**
 
-### 🏗️ **Project Structure (حفظ کنید!)**
+### 🏗️ **Project Structure (حفظ کنید!) - بعد از تمیزسازی**
 ```
-/Applications/XAMPP/xamppfiles/htdocs/xi2.ir/
-├── src/
-│   ├── database/
-│   │   ├── config.php          // ✅ Database connection ready
-│   │   └── schema.sql          // ✅ 6 tables complete
-│   ├── api/
-│   │   ├── auth/               // ⚠️ Skeleton only - needs logic
-│   │   └── upload/             // ⚠️ Skeleton only - needs logic
-│   └── logging/                // 🎯 YOUR PRIMARY FOCUS
+/Applications/XAMPP/xamppfiles/htdocs/xi2.ir/  // ✅ CLEAN & ORGANIZED
+├── admin/                     // ⚙️ Admin panel
+├── docs/                      // 📚 Documentation
+│   ├── archive/               // 📁 Old docs moved here
+│   └── technical/             // 🔧 Technical docs
+├── public/                    // 🌐 Public files
+├── src/                       // 💻 Main code
+│   ├── api/                   // 🔌 API endpoints
+│   ├── assets/               // 🎨 CSS/JS/Images
+│   ├── database/             // 💾 DB config & schemas
+│   │   └── schemas/          // 📄 SQL files HERE only
+│   ├── includes/             // 📦 Shared components
+│   └── logging/              // 🎯 YOUR PRIMARY FOCUS
 │       ├── Xi2SmartLogger.php
 │       ├── Xi2SessionManager.php
 │       ├── Xi2AIAnalyzer.php
 │       └── Xi2AutoFixer.php
-├── assets/
-│   ├── js/
-│   │   ├── main.js            // ✅ Frontend complete
-│   │   └── xi2-smart-logger.js // 🎯 Build this
-│   └── css/
-│       └── style.css          // ✅ RTL + Persian ready
-├── logs/
-│   ├── sessions/              // 🎯 Auto-generate folders here
+├── storage/                   // 💾 Storage & backups
+│   ├── backups/              // 🛡️ Safe backups HERE only
+│   ├── cache/                // ⚡ Cache files
+│   └── temp/                 // ⏱️ Temporary files HERE only
+├── tests/                     // 🧪 ALL TEST FILES HERE ONLY
+│   ├── admin/                // 👨‍💼 Admin tests
+│   ├── api/                  // 🔌 API tests
+│   ├── debug/                // 🐛 Debug files HERE only
+│   └── frontend/             // 🖥️ Frontend tests
+├── logs/                     // 📝 System logs
+│   ├── sessions/             // 🎯 Auto-generate folders here
 │   ├── daily/
 │   └── copilot-sync/
 └── .github/
-    └── instructions/          // 📍 You are here!
+    └── instructions/         // 📍 You are here!
 ```
+
+### 🚨 **CRITICAL STRUCTURE RULES:**
+- **NEVER** create `test-*.php` in root!
+- **NEVER** create `*-backup.*` anywhere except `storage/backups/`
+- **NEVER** create `debug-*.php` in root!
+- **ALWAYS** use proper folders: `tests/`, `storage/`, `docs/archive/`
 
 ### 🗄️ **Database Schema (Must Know!)**
 ```sql
@@ -643,6 +656,17 @@ class Xi2LearningEngine {
 4. **🔮 پیش‌بینی کنید**: آیا مشکلات احتمالی در نظر گرفته شده؟
 5. **🤖 هوشمند باشید**: آیا AI می‌تواند این را تحلیل کند؟
 6. **❤️ کاربر را دوست داشته باشید**: آیا کاربر از این راضی خواهد بود؟
+7. **🏗️ ساختار را حفظ کنید**: آیا فایل در مکان صحیح قرار می‌گیرد؟
+
+### 🚨 **یادآوری ساختار پروژه:**
+**قبل از هر فایل جدید، از خود بپرسید:**
+- آیا test است? → `tests/`
+- آیا backup است? → `storage/backups/`
+- آیا موقت است? → `storage/temp/`
+- آیا SQL است? → `src/database/schemas/`
+
+**هیچگاه در ریشه پروژه ایجاد نکنید:**
+- `test-*.php`, `debug-*.php`, `*-backup.*`, `temp_*`
 
 ### 🎯 **هدف نهایی:**
 ```
@@ -652,14 +676,17 @@ Xi2 باید بهترین پلتفرم اشتراک‌گذاری تصاویر ا
 ✅ کاربرانش را شاد و راضی نگه می‌دارد
 ✅ خودش یاد می‌گیرد و بهتر می‌شود
 ✅ برای مدیرش (مجتبی حسنی) مایه افتخار است
+✅ ساختار تمیز و منظم دارد (بعد از تمیزسازی ۹ شهریور ۱۴۰۴)
 ```
 
 ---
 
 **🌟 "با هر خط کدی که می‌نویسید، Xi2 را به شاهکاری تبدیل می‌کنید که مردم ایران از آن استفاده کنند و لذت ببرند!" 🌟**
 
+**🧹 "همیشه ساختار تمیز را حفظ کنید - هر فایل جای خودش!" 🏗️**
+
 ---
 
 *این دستورالعمل توسط Claude Sonnet 4 با عشق و دقت فراوان برای GitHub Copilot و پروژه Xi2 تهیه شده است.*
 
-*📅 تاریخ: ۸ شهریور ۱۴۰۴ | 🔄 نسخه: 3.0 Advanced*
+*📅 تاریخ: ۸ شهریور ۱۴۰۴ | 🔄 نسخه: 3.0 Advanced | 🧹 آپدیت: ۹ شهریور - بعد از تمیزسازی*

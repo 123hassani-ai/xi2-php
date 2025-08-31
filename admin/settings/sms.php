@@ -241,12 +241,20 @@ include '../includes/header.php';
             </div>
             
             <div class="form-group">
-                <button type="submit" name="save_settings" class="btn btn-primary">
-                    <i class="fas fa-save" style="margin-left: 8px;"></i>
-                    ذخیره تنظیمات
-                </button>
-                
-                <a href="<?php echo admin_url('settings/test-sms.php'); ?>" class="btn btn-success" style="margin-right: 15px;">
+                        <button type="submit" name="save_settings" class="btn btn-success">
+                            <i class="fas fa-save" style="margin-left: 8px;"></i>
+                            ذخیره تنظیمات
+                        </button>
+                        
+                        <a href="test-sms-simple.php" class="btn btn-primary" style="margin-right: 10px;">
+                            <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>
+                            تست ارسال پیامک
+                        </a>
+                        
+                        <a href="../logs/sms-logs.php" class="btn btn-secondary" style="margin-right: 10px;">
+                            <i class="fas fa-list" style="margin-left: 8px;"></i>
+                            مشاهده لاگ‌ها
+                        </a>                <a href="<?php echo admin_url('settings/test-sms.php'); ?>" class="btn btn-success" style="margin-right: 15px;">
                     <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>
                     تست ارسال پیامک
                 </a>

@@ -11,6 +11,11 @@
     <!-- مدیریت خودکار مسیرها -->
     <script src="/xi2.ir/src/assets/js/path-resolver.js"></script>
     
+    <!-- Styles -->
+    <link rel="stylesheet" href="/xi2.ir/src/assets/css/main.css">
+    <link rel="stylesheet" href="/xi2.ir/src/assets/css/components.css">
+    <link rel="stylesheet" href="/xi2.ir/modal-fix.css">
+    
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     
@@ -212,6 +217,15 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="/xi2.ir/src/assets/js/auth-fixed.js"></script>
+    <script src="/xi2.ir/src/assets/js/main.js"></script>
+    <script>
+        // Initialize Xi2 App
+        document.addEventListener('DOMContentLoaded', function() {
+            window.xi2Auth = new Xi2Auth();
+            window.xi2App = new Xi2App();
+        });
+    </script>
     <!-- Service Worker registration is handled in main.js -->
 </body>
 </html>

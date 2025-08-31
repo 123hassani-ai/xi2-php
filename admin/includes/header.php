@@ -13,8 +13,6 @@ $pathConfig = PathConfig::getInstance();
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 
 ?>
-
-?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
